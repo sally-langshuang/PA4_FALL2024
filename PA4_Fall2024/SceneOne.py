@@ -65,16 +65,16 @@ class SceneOne(Component, Animation):
         self.addChild(sphere)
 
         cylinder = Component(Point((-1, -1, 0)), DisplayableCylinder(shaderProg, 0.3, 0.3,  0.4,  36, 36))
-        m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+        m4 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
-        cylinder.setMaterial(m3)
+        cylinder.setMaterial(m4)
         cylinder.renderingRouting = "lighting"
         self.addChild(cylinder)
 
-        ellipsoid = Component(Point((1, -1, 0)), DisplayableEllipsoid(shaderProg, 0.4, 0.4, 0.6, 36, 36))
-        m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+        ellipsoid = Component(Point((1, -1, 0)), DisplayableEllipsoid(shaderProg, 0.4, 0.4, 0.6, 36, 36, color=ColorType.ORANGE))
+        m5 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
-        ellipsoid.setMaterial(m3)
+        ellipsoid.setMaterial(m5)
         ellipsoid.renderingRouting = "lighting"
         self.addChild(ellipsoid)
 

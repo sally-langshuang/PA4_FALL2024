@@ -62,7 +62,7 @@ class DisplayableTorus(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.SOFTBLUE):
+    def __init__(self, shaderProg, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.CYAN):
         super(DisplayableTorus, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()

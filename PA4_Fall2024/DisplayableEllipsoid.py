@@ -55,7 +55,7 @@ class DisplayableEllipsoid(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, radiusX=0.6, radiusY=0.3, radiusZ=0.9, stacks=18, slices=36, color=ColorType.SOFTBLUE):
+    def __init__(self, shaderProg, radiusX=0.6, radiusY=0.3, radiusZ=0.9, stacks=18, slices=36, color=ColorType.YELLOW):
         super(DisplayableEllipsoid, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()

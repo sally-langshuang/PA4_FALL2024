@@ -55,7 +55,7 @@ class DisplayableCylinder(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, radiusX=0.5, radiusY = 0.5, Z=0.5, stacks=18, slices=36, color=ColorType.SOFTBLUE):
+    def __init__(self, shaderProg, radiusX=0.5, radiusY = 0.5, Z=0.5, stacks=18, slices=36, color=ColorType.PINK):
         super(DisplayableCylinder, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
