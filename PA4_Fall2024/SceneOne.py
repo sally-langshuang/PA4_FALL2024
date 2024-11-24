@@ -41,7 +41,6 @@ class SceneOne(Component, Animation):
                                  self.glutility.rotate(120, [0, 0, 1], False)]
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
-
         cube = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 1.0))
         m1 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.4, 0.8, 0.6, 0.1)), 64)

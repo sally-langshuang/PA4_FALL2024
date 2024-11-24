@@ -75,9 +75,39 @@ class DisplayableEllipsoid(Displayable):
         self.color = color
 
         # we need to pad two more rows for poles and one more column for slice seam, to assign correct texture coord
-        self.vertices = np.zeros([(stacks) * (slices), 11])
+        # self.vertices = np.zeros([(stacks) * (slices), 11])
+        self.vertices,  self.indices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color )
 
-        self.indices = np.zeros(0)
+
+    def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color):
+        vertices = np.zeros([(stacks-1) * (slices)+2, 11])
+        arr_stack = np.linspace(0, 2 * np.pi, stacks+1)
+        arr_slice = np.linspace(0, 2 * np.pi, slices+1)
+        vertices[0] = np.array([0, b, 0, 0, 0, 0, *color, 0, 0])
+        vertices[-1] = np.array([0, -b, 0, 0, 0, 0, *color, 0, 0])
+        indices = np.array([], dtype=np.int32)
+        index_func = lambda i, j: i * slices + j - slices + 1
+        for i in range(1, stacks+1):
+            phi = arr_stack[i]  # φ方向分层
+            for j in range(slices):
+                k = i * slices + j - slices + 1
+                theta = arr_slice[j]# θ方向分片
+                x = a * np.cos(theta) * np.sin(phi)
+                y = b * np.cos(phi)
+                z = c * np.sin(theta) * np.sin(phi)
+                vertices[k] = np.array([x, y, z, 0, 0, 0, *color, 0, 0])
+        for j in range(1, slices):
+            indices = np.append([vertices[0], vertices[j - 1], vertices[j]])
+
+        for i in range(1, stacks + 1):
+            for j in range(slices):
+                pass
+
+        for j in range(1, slices):
+            indices = np.append([vertices[-1], vertices[j - 1], vertices[j]])
+
+        return vertices, indices
+
 
     def draw(self):
         self.vao.bind()
