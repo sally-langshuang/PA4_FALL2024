@@ -76,37 +76,58 @@ class DisplayableEllipsoid(Displayable):
 
         # we need to pad two more rows for poles and one more column for slice seam, to assign correct texture coord
         # self.vertices = np.zeros([(stacks) * (slices), 11])
-        self.vertices,  self.indices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color )
-
+        self.vertices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color )
+        self.indices = self.generate_ellipsoid_indices(stacks, slices)
 
     def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color):
-        vertices = np.zeros([(stacks-1) * (slices)+2, 11])
-        arr_stack = np.linspace(0, 2 * np.pi, stacks+1)
-        arr_slice = np.linspace(0, 2 * np.pi, slices+1)
-        vertices[0] = np.array([0, b, 0, 0, 0, 0, *color, 0, 0])
-        vertices[-1] = np.array([0, -b, 0, 0, 0, 0, *color, 0, 0])
-        indices = np.array([], dtype=np.int32)
-        index_func = lambda i, j: i * slices + j - slices + 1
-        for i in range(1, stacks+1):
+        vertices = np.zeros([stacks * slices, 11])
+        arr_stack = np.linspace(0, 2 * np.pi, stacks)
+        arr_slice = np.linspace(0, 2 * np.pi, slices)
+        north = np.array([0, b, 0, 0, 0, 0, *color, 0, 0])
+        south = np.array([0, -b, 0, 0, 0, 0, *color, 0, 0])
+        index_func = lambda i, j: i * slices + j
+        for i in range(stacks):
             phi = arr_stack[i]  # φ方向分层
             for j in range(slices):
-                k = i * slices + j - slices + 1
                 theta = arr_slice[j]# θ方向分片
                 x = a * np.cos(theta) * np.sin(phi)
                 y = b * np.cos(phi)
                 z = c * np.sin(theta) * np.sin(phi)
-                vertices[k] = np.array([x, y, z, 0, 0, 0, *color, 0, 0])
-        for j in range(1, slices):
-            indices = np.append([vertices[0], vertices[j - 1], vertices[j]])
+                k = index_func(i, j)
+                # 计算法向量
+                nx = (x / a ** 2)
+                ny = (y / b ** 2)
+                nz = (z / c ** 2)
+                norm = np.sqrt(nx ** 2 + ny ** 2 + nz ** 2)
+                nx, ny, nz = nx / norm, ny / norm, nz / norm
+                # 纹理坐标 (u, v)
+                u = theta / (2 * np.pi)  # u ∈ [0, 1]
+                v = phi / np.pi  # v ∈ [0, 1]
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
+        return vertices
 
-        for i in range(1, stacks + 1):
+    def generate_ellipsoid_indices(self, stacks, slices):
+        indices = np.array([])
+        index_func = lambda i, j: i * (slices) + j
+        same_pos = lambda a, b: a[0] == b[0] and a[1] == b[1] and a[2] == b[2]
+        for i in range(1, stacks):
             for j in range(slices):
-                pass
+                current_index = index_func(i, j)
+                current_vertice = self.vertices[current_index]
+                up_index = index_func(i - 1, j)
+                up_vertice = self.vertices[up_index]
+                if j > 0:
+                    up_left_index, = index_func(i - 1, j - 1),
+                    up_left_vertice = self.vertices[up_left_index]
+                    if not same_pos(up_left_vertice, up_vertice):
+                        indices = np.append(indices, [up_left_index, up_index, current_index])
+                if j < slices - 1:
+                    right_index = index_func(i, j + 1)
+                    right_vertice = self.vertices[right_index]
+                    if not same_pos(right_vertice, current_vertice):
+                        indices = np.append(indices, [current_index, right_index, up_index])
+        return indices
 
-        for j in range(1, slices):
-            indices = np.append([vertices[-1], vertices[j - 1], vertices[j]])
-
-        return vertices, indices
 
 
     def draw(self):
