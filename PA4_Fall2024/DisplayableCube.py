@@ -69,61 +69,101 @@ class DisplayableCube(Displayable):
         self.height = height
         self.color = color
 
-        self.vertices = np.zeros([36, 11])
+        # self.vertices = np.zeros([36, 11])
+        # vl = np.array([
+        #     # back face
+        #     -length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
+        #     -length / 2, width / 2, -height / 2, 0, 0, -1, *color,
+        #     length / 2, width / 2, -height / 2, 0, 0, -1, *color,
+        #
+        #     -length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
+        #     length / 2, width / 2, -height / 2, 0, 0, -1, *color,
+        #     length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
+        #     # front face
+        #     -length / 2, -width / 2, height / 2, 0, 0, 1, *color,
+        #     length / 2, -width / 2, height / 2, 0, 0, 1, *color,
+        #     length / 2, width / 2, height / 2, 0, 0, 1, *color,
+        #     -length / 2, -width / 2, height / 2, 0, 0, 1, *color,
+        #     length / 2, width / 2, height / 2, 0, 0, 1, *color,
+        #     -length / 2, width / 2, height / 2, 0, 0, 1, *color,
+        #     # left face
+        #     -length / 2, -width / 2, -height / 2, -1, 0, 0, *color,
+        #     -length / 2, -width / 2, height / 2, -1, 0, 0, *color,
+        #     -length / 2, width / 2, height / 2, -1, 0, 0, *color,
+        #     -length / 2, -width / 2, -height / 2, -1, 0, 0, *color,
+        #     -length / 2, width / 2, height / 2, -1, 0, 0, *color,
+        #     -length / 2, width / 2, -height / 2, -1, 0, 0, *color,
+        #     # right face
+        #     length / 2, -width / 2, height / 2, 1, 0, 0, *color,
+        #     length / 2, -width / 2, -height / 2, 1, 0, 0, *color,
+        #     length / 2, width / 2, -height / 2, 1, 0, 0, *color,
+        #     length / 2, -width / 2, height / 2, 1, 0, 0, *color,
+        #     length / 2, width / 2, -height / 2, 1, 0, 0, *color,
+        #     length / 2, width / 2, height / 2, 1, 0, 0, *color,
+        #     # top face
+        #     -length / 2, width / 2, height / 2, 0, 1, 0, *color,
+        #     length / 2, width / 2, height / 2, 0, 1, 0, *color,
+        #     length / 2, width / 2, -height / 2, 0, 1, 0, *color,
+        #     -length / 2, width / 2, height / 2, 0, 1, 0, *color,
+        #     length / 2, width / 2, -height / 2, 0, 1, 0, *color,
+        #     -length / 2, width / 2, -height / 2, 0, 1, 0, *color,
+        #     # bot face
+        #     -length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
+        #     length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
+        #     length / 2, -width / 2, height / 2, 0, -1, 0, *color,
+        #     -length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
+        #     length / 2, -width / 2, height / 2, 0, -1, 0, *color,
+        #     -length / 2, -width / 2, height / 2, 0, -1, 0, *color,
+        # ]).reshape((36, 9))
+        # self.vertices[0:36, 0:9] = vl
+
+        # TODO 1.1 rewrite vertices and self.indices
+        self.vertices = np.zeros([8, 11])
         vl = np.array([
             # back face
-            -length/2, -width/2, -height/2, 0, 0, -1, *color,
-            -length/2, width/2, -height/2, 0, 0, -1, *color,
-            length/2, width/2, -height/2, 0, 0, -1, *color,
-
-            
             -length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
+            -length / 2, width / 2, -height / 2, 0, 0, -1, *color,
             length / 2, width / 2, -height / 2, 0, 0, -1, *color,
-            length/2, -width/2, -height/2, 0, 0, -1, *color,
+            length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
             # front face
-            -length/2, -width/2, height/2, 0, 0, 1, *color,
-            length/2, -width/2, height/2, 0, 0, 1, *color,
-            length/2, width/2, height/2, 0, 0, 1, *color,
             -length / 2, -width / 2, height / 2, 0, 0, 1, *color,
+            length / 2, -width / 2, height / 2, 0, 0, 1, *color,
             length / 2, width / 2, height / 2, 0, 0, 1, *color,
-            -length/2, width/2, height/2, 0, 0, 1, *color,
-            # left face
-            -length/2, -width/2, -height/2, -1, 0, 0, *color,
-            -length/2, -width/2, height/2, -1, 0, 0, *color,
-            -length/2, width/2, height/2, -1, 0, 0, *color,
-            -length / 2, -width / 2, -height / 2, -1, 0, 0, *color,
-            -length / 2, width / 2, height / 2, -1, 0, 0, *color,
-            -length/2, width/2, -height/2, -1, 0, 0, *color,
-            # right face
-            length/2, -width/2, height/2, 1, 0, 0, *color,
-            length/2, -width/2, -height/2, 1, 0, 0, *color,
-            length/2, width/2, -height/2, 1, 0, 0, *color,
-            length / 2, -width / 2, height / 2, 1, 0, 0, *color,
-            length / 2, width / 2, -height / 2, 1, 0, 0, *color,
-            length/2, width/2, height/2, 1, 0, 0, *color,
-            # top face
-            -length/2, width/2, height/2, 0, 1, 0, *color,
-            length/2, width/2, height/2, 0, 1, 0, *color,
-            length/2, width/2, -height/2, 0, 1, 0, *color,
-            -length / 2, width / 2, height / 2, 0, 1, 0, *color,
-            length / 2, width / 2, -height / 2, 0, 1, 0, *color,
-            -length/2, width/2, -height/2, 0, 1, 0, *color,
-            # bot face
-            -length/2, -width/2, -height/2, 0, -1, 0, *color,
-            length/2, -width/2, -height/2, 0, -1, 0, *color,
-            length/2, -width/2, height/2, 0, -1, 0, *color,
-            -length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
-            length / 2, -width / 2, height / 2, 0, -1, 0, *color,
-            -length/2, -width/2, height/2, 0, -1, 0, *color,
-        ]).reshape((36, 9))
-        self.vertices[0:36, 0:9] = vl
+            -length / 2, width / 2, height / 2, 0, 0, 1, *color,
+        ]).reshape((8, 9))
+        self.vertices[0:8, 0:9] = vl
 
-        self.indices = np.array([])
+        self.indices = np.array([
+            # back face
+            0, 1, 2,  # 第一个三角形
+            0, 2, 3,  # 第二个三角形
+
+            # front face
+            4, 5, 6,  # 第一个三角形
+            4, 7, 6,  # 第二个三角形
+
+            # left face
+            0, 1, 7,  # 第一个三角形
+            0, 7, 4,  # 第二个三角形
+
+            # right face
+            2, 5, 6,  # 第一个三角形
+            2, 5, 3,  # 第二个三角形
+
+            # top face
+            1, 6, 2,  # 第一个三角形
+            1, 6, 7,  # 第二个三角形
+
+            # bottom face
+            0, 5, 4,  # 第一个三角形
+            0, 5, 3,  # 第二个三角形
+        ], dtype=np.int32)
 
     def draw(self):
         self.vao.bind()
         # TODO 1.1 is at here, switch from vbo to ebo
-        self.vbo.draw()
+        # self.vbo.draw()
+        self.ebo.draw()
         self.vao.unbind()
 
     def initialize(self):
@@ -144,4 +184,3 @@ class DisplayableCube(Displayable):
         # TODO/BONUS 6.1 is at here, you need to set attribPointer for texture coordinates
         # you should check the corresponding variable name in GLProgram and set the pointer
         self.vao.unbind()
-
