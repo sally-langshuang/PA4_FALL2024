@@ -80,6 +80,13 @@ class DisplayableEllipsoid(Displayable):
         self.vertices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color, render)
         self.indices = self.generate_ellipsoid_indices(stacks, slices)
 
+    def rgb(self, color, nx, ny, nz, render=False):
+        if render:
+            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
+        else:
+            r, g, b = [*color]
+        return (r, g, b)
+
     def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color, render=False):
         vertices = np.zeros([stacks * slices, 11])
         arr_stack = np.linspace(0, 2 * np.pi, stacks)
@@ -96,20 +103,14 @@ class DisplayableEllipsoid(Displayable):
                 z = c * np.sin(theta) * np.sin(phi)
                 k = index_func(i, j)
 
-                # 法向量直接取自 (x, y, z) 归一化
+                # norm
                 nx, ny, nz = 2*x/(a**2), 2*y/(b**2), 2*z/(c**2)
                 l = np.linalg.norm(np.array([nx, ny, nz]))
                 nx, ny, nz = nx / l, ny / l, nz / l
-                if render:
-                    red = (nx + 1) / 2
-                    green = (ny + 1) / 2
-                    blue = (nz + 1) / 2
-                else:
-                    red, green, blue = [*color]
-                # 纹理坐标 (u, v)
+                # texture (u, v)
                 u = theta / (2 * np.pi)  # u ∈ [0, 1]
                 v = phi / np.pi  # v ∈ [0, 1]
-                vertices[k] = np.array([x, y, z, nx, ny, nz, red, green, blue, u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
         return vertices
 
     def generate_ellipsoid_indices(self, stacks, slices):

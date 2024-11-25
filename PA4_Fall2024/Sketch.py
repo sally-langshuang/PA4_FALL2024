@@ -16,6 +16,7 @@ import numpy as np
 import ColorType
 from Animation import Animation
 from ModelAxes import ModelAxes
+from PA4_Fall2024.CustomScene import CustomScene
 from Point import Point
 from CanvasBase import CanvasBase
 from GLProgram import GLProgram
@@ -170,6 +171,7 @@ class Sketch(CanvasBase):
         self.basisAxes.initialize()
 
         self.switchScene(SceneOne(self.shaderProg))
+        self.switchScene(CustomScene(self.shaderProg))
 
         gl.glClearColor(*self.backgroundColor, 1.0)
         gl.glClearDepth(1.0)

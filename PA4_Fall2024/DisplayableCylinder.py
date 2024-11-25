@@ -103,7 +103,7 @@ class DisplayableCylinder(Displayable):
                 x = radiusX * np.cos(theta)
                 y = radiusY * np.sin(theta)
 
-                # 法向量（针对侧面）
+                # norm（针对侧面）
                 nx = np.cos(theta)
                 ny = np.sin(theta)
                 nz = 0

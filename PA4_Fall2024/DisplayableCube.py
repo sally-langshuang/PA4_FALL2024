@@ -121,11 +121,10 @@ class DisplayableCube(Displayable):
         ]).reshape((36, 11))
 
         self.vertices[0:36, 0:11] = vl
-        if render:
-            for vertice in self.vertices:
-                x, y, z, nx, ny, nz, r, g, b, u, v = vertice
-                r, g, b = (nx + 1) / 2 , (ny + 1) / 2 , (nz + 1) / 2
-                vertice[6:9] = [r, g, b]
+
+        for vertice in self.vertices:
+            x, y, z, nx, ny, nz, r, g, b, u, v = vertice
+            vertice[6:9] = [*self.rgb(color, nx, ny, nz, render)]
 
         self.indices = np.array([x for x in range(36)])
         # self.vertices = np.zeros([8, 11])
@@ -194,3 +193,10 @@ class DisplayableCube(Displayable):
         # TODO/BONUS 6.1 is at here, you need to set attribPointer for texture coordinates
         # you should check the corresponding variable name in GLProgram and set the pointer
         self.vao.unbind()
+
+    def rgb(self, color, nx, ny, nz, render=False):
+        if render:
+            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
+        else:
+            r, g, b = [*color]
+        return (r, g, b)
