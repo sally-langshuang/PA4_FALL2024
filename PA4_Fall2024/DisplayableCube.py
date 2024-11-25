@@ -74,52 +74,58 @@ class DisplayableCube(Displayable):
 
         vl = np.array([
             # back face
-            -length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
-            -length / 2, width / 2, -height / 2, 0, 0, -1, *color,
-            length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
+            -length / 2, -width / 2, -height / 2, 0, 0, -1, *color, 0, 0,
+            -length / 2, width / 2, -height / 2, 0, 0, -1, *color, 0, 1,
+            length / 2, -width / 2, -height / 2, 0, 0, -1, *color, 1, 0,
 
-            -length / 2, width / 2, -height / 2, 0, 0, -1, *color,
-            length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
-            length / 2, width / 2, -height / 2, 0, 0, -1, *color,
+            -length / 2, width / 2, -height / 2, 0, 0, -1, *color, 0, 1,
+            length / 2, -width / 2, -height / 2, 0, 0, -1, *color, 1, 0,
+            length / 2, width / 2, -height / 2, 0, 0, -1, *color, 1, 1,
 
             # front face
-            -length / 2, -width / 2, height / 2, 0, 0, 1, *color,
-            length / 2, -width / 2, height / 2, 0, 0, 1, *color,
-            length / 2, width / 2, height / 2, 0, 0, 1, *color,
-            -length / 2, -width / 2, height / 2, 0, 0, 1, *color,
-            length / 2, width / 2, height / 2, 0, 0, 1, *color,
-            -length / 2, width / 2, height / 2, 0, 0, 1, *color,
+            -length / 2, -width / 2, height / 2, 0, 0, 1, *color, 0, 0,
+            length / 2, -width / 2, height / 2, 0, 0, 1, *color, 1, 0,
+            length / 2, width / 2, height / 2, 0, 0, 1, *color, 1, 1,
+            -length / 2, -width / 2, height / 2, 0, 0, 1, *color, 0, 0,
+            length / 2, width / 2, height / 2, 0, 0, 1, *color, 1, 1,
+            -length / 2, width / 2, height / 2, 0, 0, 1, *color, 0, 1,
 
             # left face
-            -length / 2, -width / 2, -height / 2, -1, 0, 0, *color,
-            -length / 2, -width / 2, height / 2, -1, 0, 0, *color,
-            -length / 2, width / 2, height / 2, -1, 0, 0, *color,
-            -length / 2, -width / 2, -height / 2, -1, 0, 0, *color,
-            -length / 2, width / 2, height / 2, -1, 0, 0, *color,
-            -length / 2, width / 2, -height / 2, -1, 0, 0, *color,
+            -length / 2, -width / 2, -height / 2, -1, 0, 0, *color, 0, 0,
+            -length / 2, -width / 2, height / 2, -1, 0, 0, *color, 0, 1,
+            -length / 2, width / 2, height / 2, -1, 0, 0, *color, 1, 1,
+            -length / 2, -width / 2, -height / 2, -1, 0, 0, *color, 0, 0,
+            -length / 2, width / 2, height / 2, -1, 0, 0, *color, 1, 1,
+            -length / 2, width / 2, -height / 2, -1, 0, 0, *color, 1, 0,
             # right face
-            length / 2, -width / 2, height / 2, 1, 0, 0, *color,
-            length / 2, -width / 2, -height / 2, 1, 0, 0, *color,
-            length / 2, width / 2, -height / 2, 1, 0, 0, *color,
-            length / 2, -width / 2, height / 2, 1, 0, 0, *color,
-            length / 2, width / 2, -height / 2, 1, 0, 0, *color,
-            length / 2, width / 2, height / 2, 1, 0, 0, *color,
+            length / 2, -width / 2, height / 2, 1, 0, 0, *color, 0, 1,
+            length / 2, -width / 2, -height / 2, 1, 0, 0, *color, 0, 0,
+            length / 2, width / 2, -height / 2, 1, 0, 0, *color, 1, 0,
+            length / 2, -width / 2, height / 2, 1, 0, 0, *color, 0, 1,
+            length / 2, width / 2, -height / 2, 1, 0, 0, *color, 1, 0,
+            length / 2, width / 2, height / 2, 1, 0, 0, *color, 1, 1,
             # top face
-            -length / 2, width / 2, height / 2, 0, 1, 0, *color,
-            length / 2, width / 2, height / 2, 0, 1, 0, *color,
-            length / 2, width / 2, -height / 2, 0, 1, 0, *color,
-            -length / 2, width / 2, height / 2, 0, 1, 0, *color,
-            length / 2, width / 2, -height / 2, 0, 1, 0, *color,
-            -length / 2, width / 2, -height / 2, 0, 1, 0, *color,
+            -length / 2, width / 2, height / 2, 0, 1, 0, *color, 0, 1,
+            length / 2, width / 2, height / 2, 0, 1, 0, *color, 1, 1,
+            length / 2, width / 2, -height / 2, 0, 1, 0, *color, 1, 0,
+            -length / 2, width / 2, height / 2, 0, 1, 0, *color, 0, 1,
+            length / 2, width / 2, -height / 2, 0, 1, 0, *color, 1, 0,
+            -length / 2, width / 2, -height / 2, 0, 1, 0, *color, 0, 0,
             # bot face
-            -length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
-            length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
-            length / 2, -width / 2, height / 2, 0, -1, 0, *color,
-            -length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
-            length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
-            -length / 2, -width / 2, -height / 2, 0, -1, 0, *color,
-        ]).reshape((36, 9))
-        self.vertices[0:36, 0:9] = vl
+            -length / 2, -width / 2, -height / 2, 0, -1, 0, *color, 0, 0,
+            length / 2, -width / 2, -height / 2, 0, -1, 0, *color, 1, 0,
+            length / 2, -width / 2, height / 2, 0, -1, 0, *color, 1, 1,
+            -length / 2, -width / 2, -height / 2, 0, -1, 0, *color, 0, 0,
+            length / 2, -width / 2, height / 2, 0, -1, 0, *color, 1, 0,
+            -length / 2, -width / 2,height / 2, 0, -1, 0, *color, 0, 0,
+        ]).reshape((36, 11))
+
+        self.vertices[0:36, 0:11] = vl
+        for vertice in self.vertices:
+            x, y, z, nx, ny, nz, r, g, b, u, v = vertice
+            r, g, b = (nx + 1) / 2 , (ny + 1) / 2 , (nz + 1) / 2
+            vertice[6:9] = [r, g, b]
+
         self.indices = np.array([x for x in range(36)])
         # self.vertices = np.zeros([8, 11])
         # vl = np.array([

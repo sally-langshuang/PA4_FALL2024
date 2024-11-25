@@ -87,9 +87,12 @@ class DisplayableCylinder(Displayable):
         # 添加顶部和底部中心点的顶点
         top_center = stacks * slices  # 顶部中心点索引
         bottom_center = stacks * slices + 1  # 底部中心点索引
-
-        vertices[top_center] = np.array([0, 0, radiusZ, 0, 0, 1, *color, 0, 0])  # 顶部中心点
-        vertices[bottom_center] = np.array([0, 0, -radiusZ, 0, 0, -1, *color, 0, 0])  # 底部中心点
+        nx, ny, nz = 0, 0, 1
+        r, g, b = nx/2+0.5, ny/2+0.5, nz/2+0.5
+        vertices[top_center] = np.array([0, 0, radiusZ, 0, 0, 1, r, g, b, 0, 0])  # 顶部中心点
+        nx, ny, nz = 0, 0, -1
+        r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
+        vertices[bottom_center] = np.array([0, 0, -radiusZ, 0, 0, -1, r, g, b, 0, 0])  # 底部中心点
 
         index_func = lambda i, j: i * slices + j  # 顶点索引
 
@@ -110,7 +113,8 @@ class DisplayableCylinder(Displayable):
 
                 # 填充顶点
                 k = index_func(i, j)
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
+                r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
+                vertices[k] = np.array([x, y, z, nx, ny, nz, r, g, b, u, v])
 
         return vertices
 

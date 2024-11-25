@@ -115,7 +115,8 @@ class DisplayableTorus(Displayable):
 
                 # 填充顶点数据
                 k = i * nsides + j  # 当前顶点索引
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
+                r, g, b = nx/2+0.5, ny/2+0.5, nz/2+0.5
+                vertices[k] = np.array([x, y, z, nx, ny, nz, r, g, b, u, v])
 
         return vertices
 

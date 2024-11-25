@@ -89,20 +89,22 @@ class DisplayableEllipsoid(Displayable):
         for i in range(stacks):
             phi = arr_stack[i]  # φ方向分层
             for j in range(slices):
-                theta = arr_slice[j]# θ方向分片
+                theta = arr_slice[j]  # θ方向分片
                 x = a * np.cos(theta) * np.sin(phi)
                 y = b * np.cos(phi)
                 z = c * np.sin(theta) * np.sin(phi)
                 k = index_func(i, j)
-                # 计算法向量
-                nx = (x / a ** 2)
-                ny = (y / b ** 2)
-                nz = (z / c ** 2)
-                norm = np.sqrt(nx ** 2 + ny ** 2 + nz ** 2)
-                nx, ny, nz = nx / norm, ny / norm, nz / norm
+
+                # 法向量直接取自 (x, y, z) 归一化
+                norm = np.sqrt((x / a) ** 2 + (y / b) ** 2 + (z / c) ** 2)
+                nx, ny, nz = x / (a * norm), y / (b * norm), z / (c * norm)
+                # red = (nx + 1) / 2
+                # green = (ny + 1) / 2
+                # blue = (nz + 1) / 2
                 # 纹理坐标 (u, v)
                 u = theta / (2 * np.pi)  # u ∈ [0, 1]
                 v = phi / np.pi  # v ∈ [0, 1]
+                # vertices[k] = np.array([x, y, z, nx, ny, nz, red, green, blue, u, v])
                 vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         return vertices
 
