@@ -5,6 +5,7 @@ First version in 11/01/2021
 :author: micou(Zezhou Sun)
 :version: 2021.1.1
 """
+from unicodedata import normalize
 
 from Displayable import Displayable
 from GLBuffer import VAO, VBO, EBO
@@ -96,16 +97,17 @@ class DisplayableEllipsoid(Displayable):
                 k = index_func(i, j)
 
                 # 法向量直接取自 (x, y, z) 归一化
-                norm = np.sqrt((x / a) ** 2 + (y / b) ** 2 + (z / c) ** 2)
-                nx, ny, nz = x / (a * norm), y / (b * norm), z / (c * norm)
-                # red = (nx + 1) / 2
-                # green = (ny + 1) / 2
-                # blue = (nz + 1) / 2
+                nx, ny, nz = 2*x/(a**2), 2*y/(b**2), 2*z/(c**2)
+                l = np.linalg.norm(np.array([nx, ny, nz]))
+                nx, ny, nz = nx / l, ny / l, nz / l
+                red = (nx + 1) / 2
+                green = (ny + 1) / 2
+                blue = (nz + 1) / 2
                 # 纹理坐标 (u, v)
                 u = theta / (2 * np.pi)  # u ∈ [0, 1]
                 v = phi / np.pi  # v ∈ [0, 1]
-                # vertices[k] = np.array([x, y, z, nx, ny, nz, red, green, blue, u, v])
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, red, green, blue, u, v])
+                # vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         return vertices
 
     def generate_ellipsoid_indices(self, stacks, slices):
