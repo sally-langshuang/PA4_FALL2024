@@ -171,7 +171,7 @@ class Sketch(CanvasBase):
         self.basisAxes.initialize()
 
         self.switchScene(SceneOne(self.shaderProg))
-        self.switchScene(CustomScene(self.shaderProg))
+        # self.switchScene(CustomScene(self.shaderProg))
 
         gl.glClearColor(*self.backgroundColor, 1.0)
         gl.glClearDepth(1.0)

@@ -50,7 +50,7 @@ class CustomScene(Component, Animation):
         cube.renderingRouting = "lighting"
         self.addChild(cube)
 
-        torus = Component(Point((1, 1, 0)), DisplayableTorus(shaderProg, 0.15, 0.3, 36, 36, render=render))
+        torus = Component(Point((1, 1, 0)), DisplayableTorus(shaderProg, 0.15, 0.3, 10, 10, render=render))
         m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)

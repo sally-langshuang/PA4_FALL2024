@@ -290,7 +290,8 @@ class GLProgram:
                 //   range 0 to 1.
                 vec3 normalizedNormal = (vNormal + 1.0) / 2.0;
                 
-                results[ri] = vec4(0.5, 0.5, 0.5, 1.0);
+                //results[ri] = vec4(0.5, 0.5, 0.5, 1.0);
+                results[ri] = vec4(normalizedNormal, 1.0);
                 ri+=1;
             }}
             

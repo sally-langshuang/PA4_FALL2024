@@ -88,10 +88,10 @@ class DisplayableTorus(Displayable):
         self.indices = self.generate_torus_indices(rings, nsides)
 
     def generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color, render=False):
-        # 创建顶点数组，假设属性包括：位置(3) + 法向量(3) + 颜色(3) + 纹理坐标(2)
+        # 位置(3) + 法向量(3) + 颜色(3) + 纹理坐标(2)
         vertices = np.zeros((rings * nsides, 11))
 
-        # 角度划分
+        # angle
         arr_theta = np.linspace(0, 2 * np.pi, rings, endpoint=False)  # 主圆分段
         arr_phi = np.linspace(0, 2 * np.pi, nsides, endpoint=False)  # 小圆分段
 
@@ -108,18 +108,15 @@ class DisplayableTorus(Displayable):
                 nz = np.cos(phi)
 
                 # texture (u, v)
-                u = i / (rings - 1)  # 横向纹理坐标
-                v = j / (nsides - 1)  # 纵向纹理坐标
+                u = i / (rings - 1)
+                v = j / (nsides - 1)
 
                 # index
-                k = i * nsides + j  # 当前顶点索引
-                if render:
-                    r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-                else:
-                    r, g, b = [*color]
-                vertices[k] = np.array([x, y, z, nx, ny, nz, r, g, b, u, v])
+                k = i * nsides + j
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
 
         return vertices
+
     def _generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color, render=False):
         # x, y, z, nx, ny, nz, r, g, b, u, v
         vertices = np.zeros((rings * nsides, 11))
