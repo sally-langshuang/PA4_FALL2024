@@ -62,7 +62,7 @@ class DisplayableTorus(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.CYAN):
+    def __init__(self, shaderProg, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.CYAN, render=False):
         super(DisplayableTorus, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -71,9 +71,9 @@ class DisplayableTorus(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(innerRadius, outerRadius, nsides, rings, color)
+        self.generate(innerRadius, outerRadius, nsides, rings, color, render)
 
-    def generate(self, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.SOFTBLUE):
+    def generate(self, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.SOFTBLUE, render=False):
         self.innerRadius = innerRadius
         self.outerRadius = outerRadius
         self.nsides = nsides
@@ -82,14 +82,14 @@ class DisplayableTorus(Displayable):
 
         # we need to pad one more row for both nsides and rings, to assign correct texture coord to them
         self.vertices = np.zeros([(nsides) * (rings), 11])
-        self.vertices = self.generate_torus_vertices(outerRadius, innerRadius, rings, nsides, color)
+        self.vertices = self.generate_torus_vertices(outerRadius, innerRadius, rings, nsides, color, render)
 
         self.indices = np.zeros(0)
         self.indices = self.generate_torus_indices(rings, nsides)
 
     import numpy as np
 
-    def generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color):
+    def generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color, render=False):
         # 创建顶点数组，假设属性包括：位置(3) + 法向量(3) + 颜色(3) + 纹理坐标(2)
         vertices = np.zeros((rings * nsides, 11))
 
@@ -115,7 +115,10 @@ class DisplayableTorus(Displayable):
 
                 # 填充顶点数据
                 k = i * nsides + j  # 当前顶点索引
-                r, g, b = nx/2+0.5, ny/2+0.5, nz/2+0.5
+                if render:
+                    r, g, b = nx/2+0.5, ny/2+0.5, nz/2+0.5
+                else:
+                    r, g, b = [*color]
                 vertices[k] = np.array([x, y, z, nx, ny, nz, r, g, b, u, v])
 
         return vertices

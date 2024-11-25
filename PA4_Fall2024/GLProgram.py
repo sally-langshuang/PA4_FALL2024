@@ -288,6 +288,7 @@ class GLProgram:
                 //   (i.e. the rgb values come from the xyz components of the normal). The value for each dimension in 
                 //   vertex normal will be in the range -1 to 1. You will need to offset and rescale them to the 
                 //   range 0 to 1.
+                vec3 normalizedNormal = (vNormal + 1.0) / 2.0;
                 
                 results[ri] = vec4(0.5, 0.5, 0.5, 1.0);
                 ri+=1;

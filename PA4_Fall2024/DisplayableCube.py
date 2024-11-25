@@ -52,7 +52,7 @@ class DisplayableCube(Displayable):
     height = None
     color = None
 
-    def __init__(self, shaderProg, length=1, width=1, height=1, color=ColorType.BLUE):
+    def __init__(self, shaderProg, length=1, width=1, height=1, color=ColorType.BLUE, render=False):
         super(DisplayableCube, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -61,9 +61,9 @@ class DisplayableCube(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(length, width, height, color)
+        self.generate(length, width, height, color, render)
 
-    def generate(self, length=1, width=1, height=1, color=None):
+    def generate(self, length=1, width=1, height=1, color=None, render=False):
         self.length = length
         self.width = width
         self.height = height
@@ -121,10 +121,11 @@ class DisplayableCube(Displayable):
         ]).reshape((36, 11))
 
         self.vertices[0:36, 0:11] = vl
-        for vertice in self.vertices:
-            x, y, z, nx, ny, nz, r, g, b, u, v = vertice
-            r, g, b = (nx + 1) / 2 , (ny + 1) / 2 , (nz + 1) / 2
-            vertice[6:9] = [r, g, b]
+        if render:
+            for vertice in self.vertices:
+                x, y, z, nx, ny, nz, r, g, b, u, v = vertice
+                r, g, b = (nx + 1) / 2 , (ny + 1) / 2 , (nz + 1) / 2
+                vertice[6:9] = [r, g, b]
 
         self.indices = np.array([x for x in range(36)])
         # self.vertices = np.zeros([8, 11])

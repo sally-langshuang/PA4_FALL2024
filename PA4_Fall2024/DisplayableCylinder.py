@@ -5,6 +5,7 @@ First version in 11/01/2021
 :author: micou(Zezhou Sun)
 :version: 2021.1.1
 """
+from inspect import stack
 
 from Displayable import Displayable
 from GLBuffer import VAO, VBO, EBO
@@ -55,7 +56,7 @@ class DisplayableCylinder(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, radiusX=0.5, radiusY = 0.5, Z=0.5, stacks=18, slices=36, color=ColorType.PINK):
+    def __init__(self, shaderProg, radiusX=0.5, radiusY = 0.5, Z=0.5, stacks=18, slices=36, color=ColorType.PINK, render=False):
         super(DisplayableCylinder, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -64,9 +65,9 @@ class DisplayableCylinder(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(radiusX, radiusY, Z, stacks, slices, color)
+        self.generate(radiusX, radiusY, Z, stacks, slices, color, render)
 
-    def generate(self, radiusX=0.5, radiusY=0.5, radiusZ=0.5, stacks=18, slices=36, color=ColorType.SOFTBLUE):
+    def generate(self, radiusX=0.5, radiusY=0.5, radiusZ=0.5, stacks=18, slices=36, color=ColorType.SOFTBLUE, render=False):
         self.radiusX = radiusX
         self.radiusY = radiusY
         self.radiusZ = radiusZ
@@ -76,75 +77,95 @@ class DisplayableCylinder(Displayable):
 
         # we need to pad two more rows for poles and one more column for slice seam, to assign correct texture coord
         # self.vertices = np.zeros([(stacks) * (slices), 11])
-        self.vertices = self.generate_cylinder_vertices(radiusX, radiusY, radiusZ, stacks, slices, color)
+        self.vertices = self.generate_cylinder_vertices(radiusX, radiusY, radiusZ, stacks, slices, color, render)
         self.indices = self.generate_cylinder_indices(stacks, slices)
 
-    def generate_cylinder_vertices(self, radiusX, radiusY, radiusZ, stacks, slices, color):
-        vertices = np.zeros((stacks * slices + 2, 11))
-        arr_stack = np.linspace(radiusZ, -radiusZ, stacks)  # 高度分层
-        arr_slice = np.linspace(0, 2 * np.pi, slices, endpoint=False)  # 圆周分片
+    def rgb(self, color, nx, ny, nz, render=False):
+        if render:
+            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
+        else:
+            r, g, b = [*color]
+        return (r, g, b)
 
-        # 添加顶部和底部中心点的顶点
-        top_center = stacks * slices  # 顶部中心点索引
-        bottom_center = stacks * slices + 1  # 底部中心点索引
-        nx, ny, nz = 0, 0, 1
-        r, g, b = nx/2+0.5, ny/2+0.5, nz/2+0.5
-        vertices[top_center] = np.array([0, 0, radiusZ, 0, 0, 1, r, g, b, 0, 0])  # 顶部中心点
-        nx, ny, nz = 0, 0, -1
-        r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-        vertices[bottom_center] = np.array([0, 0, -radiusZ, 0, 0, -1, r, g, b, 0, 0])  # 底部中心点
+    def generate_cylinder_vertices(self, radiusX, radiusY, radiusZ, stacks, slices, color, render=False):
+        vertices = np.zeros((stacks * slices, 11))
+        arr_stack = np.linspace(radiusZ, -radiusZ, stacks)
+        arr_slice = np.linspace(0, 2 * np.pi, slices, endpoint=False)
 
-        index_func = lambda i, j: i * slices + j  # 顶点索引
+        top_center = np.array([[0, 0, radiusZ, 0, 0, 1, *(self.rgb(color, 0, 0, 1, render)), 0, 0]])
+        bottom_center = np.array([[0, 0, -radiusZ, 0, 0, -1,*(self.rgb(color, 0, 0, -1, render)), 0, 0]])
 
-        for i, z in enumerate(arr_stack):  # 沿着高度方向
-            for j, theta in enumerate(arr_slice):  # 沿着圆周方向
-                # 计算顶点位置
+        index_func = lambda i, j: i * slices + j
+
+        for i, z in enumerate(arr_stack):
+            for j, theta in enumerate(arr_slice):
+                # vertice position
                 x = radiusX * np.cos(theta)
                 y = radiusY * np.sin(theta)
 
-                # 计算法向量（针对侧面）
+                # 法向量（针对侧面）
                 nx = np.cos(theta)
                 ny = np.sin(theta)
                 nz = 0
 
-                # 纹理坐标 (u, v)
+                # texture pos (u, v)
                 u = j / slices
                 v = i / stacks
 
-                # 填充顶点
+                # idx
                 k = index_func(i, j)
-                r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-                vertices[k] = np.array([x, y, z, nx, ny, nz, r, g, b, u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+        # top circle vertices
+        top_vertices =  np.zeros((slices, 11))
+        for j, theta in enumerate(arr_slice):
+            x = radiusX * np.cos(theta)
+            y = radiusY * np.sin(theta)
+            z = radiusZ
+            nx, ny, nz = 0, 0, 1
+            top_vertices[j] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+        # bottom circle vertices
+        bottom_vertices = np.zeros((slices, 11))
+        for j, theta in enumerate(arr_slice):
+            x = radiusX * np.cos(theta)
+            y = radiusY * np.sin(theta)
+            z = -radiusZ
+            nx, ny, nz = 0, 0, -1
+            bottom_vertices[j] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
 
-        return vertices
+        all_vertices = np.concatenate([top_center, top_vertices,  vertices, bottom_vertices,  bottom_center ], axis=0)
+        return all_vertices
 
     def generate_cylinder_indices(self, stacks, slices):
         indices = []
 
-        # 生成侧面的索引
-        for i in range(stacks - 1):  # 每一层
-            for j in range(slices):  # 每个分片
-                current = i * slices + j
-                next_stack = (i + 1) * slices + j
-                next_slice = i * slices + (j + 1) % slices  # 下一个slice，循环回到0
-                next_next_stack = (i + 1) * slices + (j + 1) % slices  # 下一个分片
+        # middle index
+        for i in range(stacks-1):
+            for j in range(slices):
+                offset = 1 + slices
+                current = i * slices + j + offset
+                next_stack = (i + 1) * slices + j + offset
+                next_slice = i * slices + (j + 1) % slices + offset  # net slice
+                next_next_stack = (i + 1) * slices + (j + 1) % slices + offset  # next stack
 
-                # 侧面，两个三角形
-                indices.append([current, next_stack, next_slice])  # 第一个三角形
-                indices.append([next_stack, next_next_stack, next_slice])  # 第二个三角形
+                # two triangles
+                indices.append([current, next_stack, next_slice])  # first triangle
+                indices.append([next_stack, next_next_stack, next_slice])  # second triangle
 
-        # 生成顶部和底部的索引
-        # 顶部，中心顶点是第0层，每个顶点都与中心顶点组成三角形
-        top_center = stacks * slices  # 顶部中心点的索引
-        bottom_center = stacks * slices + 1  # 底部中心点的索引
+
+        top_center = 0
+        bottom_center = (stacks + 2) * slices + 2 - 1
 
         for j in range(slices):
             current = j
             next = (j + 1) % slices
-            # 顶部索引
-            indices.append([top_center, current, next])
-            # 底部索引
-            indices.append([bottom_center, current + (stacks - 1) * slices, next + (stacks - 1) * slices])
+            offset_top = 1
+            indices.append([top_center , current + offset_top, next + offset_top])
+
+        for j in range(slices):
+            current = j
+            next = (j + 1) % slices
+            offset_bottom = 1 + slices * (stacks + 1)
+            indices.append([bottom_center, current + offset_bottom, next + offset_bottom])
 
         return np.array(indices)
 
