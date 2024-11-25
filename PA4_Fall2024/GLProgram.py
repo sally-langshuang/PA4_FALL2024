@@ -68,6 +68,10 @@ class GLProgram:
 
         # define attribs name and corresponding method to set it
         self.attribs = {
+            "specularOn": "speularOn",
+            "diffuseOn": "diffuseOn",
+            "ambientOn": "ambientOn",
+
             "vertexPos": "aPos",
             "vertexNormal": "aNormal",
             "vertexColor": "aColor",
@@ -146,6 +150,9 @@ class GLProgram:
         uniform mat4 {self.attribs["modelMat"]};
         
         uniform bool imageFlag;
+        uniform bool specularOn;
+        uniform bool diffuseOn;
+        uniform bool ambientOn;
 
         void main()
         {{
@@ -203,6 +210,9 @@ class GLProgram:
         uniform Light {self.attribs["light"]}[MAX_LIGHT_NUM];
         
         uniform bool imageFlag;
+        uniform bool specularOn;
+        uniform bool diffuseOn;
+        uniform bool ambientOn;
         uniform vec3 iResolution;
         uniform vec3 iMouse;
         uniform float iTime;
@@ -272,6 +282,28 @@ class GLProgram:
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), {self.attribs["material"]}.highlight);
                     specularColor += currentLight.color * {self.attribs["material"]}.specular * spec;
                     
+                    ////////// TODO 4: Set up lights
+                    // Requirements:
+                    //   * Use the Light struct which is defined above and the provided Light class to implement 
+                    //   illumination equations for 3 different light sources: Point light, Infinite light, 
+                    //   Spotlight with radial and angular attenuation
+                    //   * In the Sketch.py file Interrupt_keyboard method, bind keyboard interfaces that allows 
+                    //   the user to toggle on/off specular, diffuse, and ambient with keys S, D, A.
+                    // 点光源计算
+                    //if (currentLight.pointOn) {{
+                        // 从光源到片段的方向向量
+                        //vec3 lightDir = normalize(currentLight.position - fragPosition);
+                        
+                        // 计算光源到片段的距离
+                        //float distance = length(currentLight.position - fragPosition);
+                        // 计算径向衰减
+                        //float attenuation = 1.0 / (currentLight.attenuation.x + currentLight.attenuation.y * distance + currentLight.attenuation.z * distance * distance);
+                        // 计算镜面反射
+                        // vec3 reflectDir = reflect(-lightDir, vNormal);  // 反射方向
+                        // float spec = pow(max(dot(viewDir, reflectDir), 0.0), {{self.attribs["material"]}}.highlight);
+                        // specularColor += attenuation * currentLight.color * {{self.attribs["material"]}}.specular * spec;
+
+                    //}}
                     // Spotlight (if spotOn is true)
                     if (currentLight.spotOn) {{
                         // Compute spotlight attenuation based on the angle and direction
@@ -297,16 +329,16 @@ class GLProgram:
 
                 }}
                 // Combine the contributions: Ambient, Diffuse, and Specular
-                result = ambientColor + diffuseColor + specularColor;
-
-                
-                ////////// TODO 4: Set up lights
-                // Requirements:
-                //   * Use the Light struct which is defined above and the provided Light class to implement 
-                //   illumination equations for 3 different light sources: Point light, Infinite light, 
-                //   Spotlight with radial and angular attenuation
-                //   * In the Sketch.py file Interrupt_keyboard method, bind keyboard interfaces that allows 
-                //   the user to toggle on/off specular, diffuse, and ambient with keys S, D, A.
+                //result = ambientColor + diffuseColor + specularColor;
+                if (specularOn) {{
+                    result += specularColor;
+                }}
+                if (diffuseOn) {{
+                    result += diffuseColor;
+                }}
+                if (ambientOn) {{
+                    result += ambientColor;
+                }}
 
                 results[ri] = result;
                 ri+=1;
