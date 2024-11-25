@@ -62,7 +62,7 @@ class DisplayableTorus(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.CYAN, render=False):
+    def __init__(self, shaderProg, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.CYAN):
         super(DisplayableTorus, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -71,9 +71,9 @@ class DisplayableTorus(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(innerRadius, outerRadius, nsides, rings, color, render)
+        self.generate(innerRadius, outerRadius, nsides, rings, color)
 
-    def generate(self, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.SOFTBLUE, render=False):
+    def generate(self, innerRadius=0.25, outerRadius=0.5, nsides=36, rings=36, color=ColorType.SOFTBLUE):
         self.innerRadius = innerRadius
         self.outerRadius = outerRadius
         self.nsides = nsides
@@ -82,12 +82,12 @@ class DisplayableTorus(Displayable):
 
         # we need to pad one more row for both nsides and rings, to assign correct texture coord to them
         self.vertices = np.zeros([(nsides) * (rings), 11])
-        self.vertices = self.generate_torus_vertices(outerRadius, innerRadius, rings, nsides, color, render)
+        self.vertices = self.generate_torus_vertices(outerRadius, innerRadius, rings, nsides, color)
 
         self.indices = np.zeros(0)
         self.indices = self.generate_torus_indices(rings, nsides)
 
-    def generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color, render=False):
+    def generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color):
         # 位置(3) + 法向量(3) + 颜色(3) + 纹理坐标(2)
         vertices = np.zeros((rings * nsides, 11))
 
@@ -113,11 +113,11 @@ class DisplayableTorus(Displayable):
 
                 # index
                 k = i * nsides + j
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
 
         return vertices
 
-    def _generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color, render=False):
+    def _generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color):
         # x, y, z, nx, ny, nz, r, g, b, u, v
         vertices = np.zeros((rings * nsides, 11))
 
@@ -145,7 +145,7 @@ class DisplayableTorus(Displayable):
 
                 # index
                 k = i * nsides + j
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
 
         return vertices
 
@@ -193,10 +193,3 @@ class DisplayableTorus(Displayable):
                                   stride=11, offset=6, attribSize=3)
 
         self.vao.unbind()
-
-    def rgb(self, color, nx, ny, nz, render=False):
-        if render:
-            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-        else:
-            r, g, b = [*color]
-        return (r, g, b)

@@ -56,7 +56,7 @@ class DisplayableCylinder(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, radiusX=0.5, radiusY = 0.5, Z=0.5, stacks=18, slices=36, color=ColorType.PINK, render=False):
+    def __init__(self, shaderProg, radiusX=0.5, radiusY = 0.5, Z=0.5, stacks=18, slices=36, color=ColorType.PINK):
         super(DisplayableCylinder, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -65,9 +65,9 @@ class DisplayableCylinder(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(radiusX, radiusY, Z, stacks, slices, color, render)
+        self.generate(radiusX, radiusY, Z, stacks, slices, color)
 
-    def generate(self, radiusX=0.5, radiusY=0.5, radiusZ=0.5, stacks=18, slices=36, color=ColorType.SOFTBLUE, render=False):
+    def generate(self, radiusX=0.5, radiusY=0.5, radiusZ=0.5, stacks=18, slices=36, color=ColorType.SOFTBLUE):
         self.radiusX = radiusX
         self.radiusY = radiusY
         self.radiusZ = radiusZ
@@ -77,23 +77,16 @@ class DisplayableCylinder(Displayable):
 
         # we need to pad two more rows for poles and one more column for slice seam, to assign correct texture coord
         # self.vertices = np.zeros([(stacks) * (slices), 11])
-        self.vertices = self.generate_cylinder_vertices(radiusX, radiusY, radiusZ, stacks, slices, color, render)
+        self.vertices = self.generate_cylinder_vertices(radiusX, radiusY, radiusZ, stacks, slices, color)
         self.indices = self.generate_cylinder_indices(stacks, slices)
 
-    def rgb(self, color, nx, ny, nz, render=False):
-        if render:
-            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-        else:
-            r, g, b = [*color]
-        return (r, g, b)
-
-    def generate_cylinder_vertices(self, radiusX, radiusY, radiusZ, stacks, slices, color, render=False):
+    def generate_cylinder_vertices(self, radiusX, radiusY, radiusZ, stacks, slices, color):
         vertices = np.zeros((stacks * slices, 11))
         arr_stack = np.linspace(radiusZ, -radiusZ, stacks)
         arr_slice = np.linspace(0, 2 * np.pi, slices, endpoint=False)
 
-        top_center = np.array([[0, 0, radiusZ, 0, 0, 1, *(self.rgb(color, 0, 0, 1, render)), 0, 0]])
-        bottom_center = np.array([[0, 0, -radiusZ, 0, 0, -1,*(self.rgb(color, 0, 0, -1, render)), 0, 0]])
+        top_center = np.array([[0, 0, radiusZ, 0, 0, 1, *color, 0, 0]])
+        bottom_center = np.array([[0, 0, -radiusZ, 0, 0, -1,*color, 0, 0]])
 
         index_func = lambda i, j: i * slices + j
 
@@ -114,7 +107,7 @@ class DisplayableCylinder(Displayable):
 
                 # idx
                 k = index_func(i, j)
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         # top circle vertices
         top_vertices =  np.zeros((slices, 11))
         for j, theta in enumerate(arr_slice):
@@ -122,7 +115,7 @@ class DisplayableCylinder(Displayable):
             y = radiusY * np.sin(theta)
             z = radiusZ
             nx, ny, nz = 0, 0, 1
-            top_vertices[j] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+            top_vertices[j] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         # bottom circle vertices
         bottom_vertices = np.zeros((slices, 11))
         for j, theta in enumerate(arr_slice):
@@ -130,7 +123,7 @@ class DisplayableCylinder(Displayable):
             y = radiusY * np.sin(theta)
             z = -radiusZ
             nx, ny, nz = 0, 0, -1
-            bottom_vertices[j] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+            bottom_vertices[j] = np.array([x, y, z, nx, ny, nz, *color, u, v])
 
         all_vertices = np.concatenate([top_center, top_vertices,  vertices, bottom_vertices,  bottom_center ], axis=0)
         return all_vertices

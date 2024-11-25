@@ -52,7 +52,7 @@ class DisplayableCube(Displayable):
     height = None
     color = None
 
-    def __init__(self, shaderProg, length=1, width=1, height=1, color=ColorType.BLUE, render=False):
+    def __init__(self, shaderProg, length=1, width=1, height=1, color=ColorType.BLUE):
         super(DisplayableCube, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -61,9 +61,9 @@ class DisplayableCube(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(length, width, height, color, render)
+        self.generate(length, width, height, color)
 
-    def generate(self, length=1, width=1, height=1, color=None, render=False):
+    def generate(self, length=1, width=1, height=1, color=None):
         self.length = length
         self.width = width
         self.height = height
@@ -122,51 +122,9 @@ class DisplayableCube(Displayable):
 
         self.vertices[0:36, 0:11] = vl
 
-        for vertice in self.vertices:
-            x, y, z, nx, ny, nz, r, g, b, u, v = vertice
-            vertice[6:9] = [*self.rgb(color, nx, ny, nz, render)]
 
         self.indices = np.array([x for x in range(36)])
-        # self.vertices = np.zeros([8, 11])
-        # vl = np.array([
-        #     # back face
-        #     -length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
-        #     -length / 2, width / 2, -height / 2, 0, 0, -1, *color,
-        #     length / 2, width / 2, -height / 2, 0, 0, -1, *color,
-        #     length / 2, -width / 2, -height / 2, 0, 0, -1, *color,
-        #     # front face
-        #     -length / 2, -width / 2, height / 2, 0, 0, 1, *color,
-        #     length / 2, -width / 2, height / 2, 0, 0, 1, *color,
-        #     length / 2, width / 2, height / 2, 0, 0, 1, *color,
-        #     -length / 2, width / 2, height / 2, 0, 0, 1, *color,
-        # ]).reshape((8, 9))
-        # self.vertices[0:8, 0:9] = vl
-        #
-        # self.indices = np.array([
-        #     # back face
-        #     0, 1, 2,  # 第一个三角形
-        #     0, 2, 3,  # 第二个三角形
-        #
-        #     # front face
-        #     4, 5, 6,  # 第一个三角形
-        #     4, 7, 6,  # 第二个三角形
-        #
-        #     # left face
-        #     0, 1, 7,  # 第一个三角形
-        #     0, 7, 4,  # 第二个三角形
-        #
-        #     # right face
-        #     2, 5, 6,  # 第一个三角形
-        #     2, 5, 3,  # 第二个三角形
-        #
-        #     # top face
-        #     1, 6, 2,  # 第一个三角形
-        #     1, 6, 7,  # 第二个三角形
-        #
-        #     # bottom face
-        #     0, 5, 4,  # 第一个三角形
-        #     0, 5, 3,  # 第二个三角形
-        # ], dtype=np.int32)
+
 
     def draw(self):
         self.vao.bind()
@@ -193,10 +151,3 @@ class DisplayableCube(Displayable):
         # TODO/BONUS 6.1 is at here, you need to set attribPointer for texture coordinates
         # you should check the corresponding variable name in GLProgram and set the pointer
         self.vao.unbind()
-
-    def rgb(self, color, nx, ny, nz, render=False):
-        if render:
-            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-        else:
-            r, g, b = [*color]
-        return (r, g, b)

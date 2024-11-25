@@ -42,23 +42,22 @@ class SceneOne(Component, Animation):
                                  self.glutility.rotate(120, [0, 0, 1], False)]
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
-        render = False
-        cube = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 1.0, render=render))
+        cube = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 1.0))
         m1 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.4, 0.8, 0.6, 0.1)), 64)
         cube.setMaterial(m1)
-        cube.renderingRouting = "lighting"
+        cube.renderingRouting = "normal"
         self.addChild(cube)
 
-        torus = Component(Point((1, 0, 0)), DisplayableTorus(shaderProg, 0.15, 0.3, 36, 36, render=render))
+        torus = Component(Point((1, 0, 0)), DisplayableTorus(shaderProg, 0.15, 0.3, 36, 36))
         m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
-        torus.renderingRouting = "lighting"
+        torus.renderingRouting = "normal"
         torus.rotate(90, torus.uAxis)
         self.addChild(torus)
 
-        sphere = Component(Point((-1, 0, 0)), DisplayableEllipsoid(shaderProg, 0.4, 0.4, 0.4, 36, 36, render=render))
+        sphere = Component(Point((-1, 0, 0)), DisplayableEllipsoid(shaderProg, 0.4, 0.4, 0.4, 36, 36))
         m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
         sphere.setMaterial(m3)

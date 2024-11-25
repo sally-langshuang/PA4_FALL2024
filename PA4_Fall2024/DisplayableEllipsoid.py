@@ -56,7 +56,7 @@ class DisplayableEllipsoid(Displayable):
     vertices = None
     indices = None
 
-    def __init__(self, shaderProg, radiusX=0.6, radiusY=0.3, radiusZ=0.9, stacks=18, slices=36, color=ColorType.YELLOW, render=False):
+    def __init__(self, shaderProg, radiusX=0.6, radiusY=0.3, radiusZ=0.9, stacks=18, slices=36, color=ColorType.YELLOW):
         super(DisplayableEllipsoid, self).__init__()
         self.shaderProg = shaderProg
         self.shaderProg.use()
@@ -65,9 +65,9 @@ class DisplayableEllipsoid(Displayable):
         self.vbo = VBO()  # vbo can only be initiate with glProgram activated
         self.ebo = EBO()
 
-        self.generate(radiusX, radiusY, radiusZ, stacks, slices, color, render)
+        self.generate(radiusX, radiusY, radiusZ, stacks, slices, color)
 
-    def generate(self, radiusX=0.6, radiusY=0.3, radiusZ=0.9, stacks=18, slices=36, color=ColorType.SOFTBLUE, render=False):
+    def generate(self, radiusX=0.6, radiusY=0.3, radiusZ=0.9, stacks=18, slices=36, color=ColorType.SOFTBLUE):
         self.radiusX = radiusX
         self.radiusY = radiusY
         self.radiusZ = radiusZ
@@ -77,17 +77,11 @@ class DisplayableEllipsoid(Displayable):
 
         # we need to pad two more rows for poles and one more column for slice seam, to assign correct texture coord
         # self.vertices = np.zeros([(stacks) * (slices), 11])
-        self.vertices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color, render)
+        self.vertices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color)
         self.indices = self.generate_ellipsoid_indices(stacks, slices)
 
-    def rgb(self, color, nx, ny, nz, render=False):
-        if render:
-            r, g, b = nx / 2 + 0.5, ny / 2 + 0.5, nz / 2 + 0.5
-        else:
-            r, g, b = [*color]
-        return (r, g, b)
 
-    def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color, render=False):
+    def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color):
         vertices = np.zeros([stacks * slices, 11])
         arr_stack = np.linspace(0, 2 * np.pi, stacks)
         arr_slice = np.linspace(0, 2 * np.pi, slices)
@@ -110,7 +104,7 @@ class DisplayableEllipsoid(Displayable):
                 # texture (u, v)
                 u = theta / (2 * np.pi)  # u ∈ [0, 1]
                 v = phi / np.pi  # v ∈ [0, 1]
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *self.rgb(color, nx, ny, nz, render), u, v])
+                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         return vertices
 
     def generate_ellipsoid_indices(self, stacks, slices):
