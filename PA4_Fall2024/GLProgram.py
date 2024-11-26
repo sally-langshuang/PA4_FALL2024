@@ -68,8 +68,6 @@ class GLProgram:
 
         # define attribs name and corresponding method to set it
         self.attribs = {
-            "specularOn": "specularOn",
-
             "vertexPos": "aPos",
             "vertexNormal": "aNormal",
             "vertexColor": "aColor",
@@ -148,7 +146,6 @@ class GLProgram:
         uniform mat4 {self.attribs["modelMat"]};
         
         uniform bool imageFlag;
-        uniform bool specularOn;
 
         void main()
         {{
@@ -206,7 +203,6 @@ class GLProgram:
         uniform Light {self.attribs["light"]}[MAX_LIGHT_NUM];
         
         uniform bool imageFlag;
-        uniform bool specularOn;
         uniform vec3 iResolution;
         uniform vec3 iMouse;
         uniform float iTime;
@@ -323,8 +319,8 @@ class GLProgram:
 
                 }}
                 // Combine the contributions: Ambient, Diffuse, and Specular
-                //result = ambientColor + diffuseColor + specularColor;
-                result +=  ambientColor;
+                result = ambientColor + diffuseColor + specularColor;
+            
                 
                 results[ri] = result;
                 ri+=1;

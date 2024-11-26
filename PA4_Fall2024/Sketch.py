@@ -95,7 +95,6 @@ class Sketch(CanvasBase):
     
     # Image mode
     ImageModeOn = False
-    specularOn = True
     start_time = None
     left_mouse_down = 0
 
@@ -187,7 +186,6 @@ class Sketch(CanvasBase):
         self.shaderProg.setMat4("modelMat", np.identity(4))
         self.shaderProg.setVec3("viewPosition", np.array(self.getCameraPos()))
         self.shaderProg.setBool("imageFlag", self.ImageModeOn)
-        self.shaderProg.setBool("specularOn", self.specularOn)
 
     def getCameraPos(self):
         ct = math.cos(self.cameraTheta)
@@ -413,13 +411,11 @@ class Sketch(CanvasBase):
             self.shaderProg.setBool("imageFlag", self.ImageModeOn)
         # TODO 4.2 is at here
         if chr(keycode) in "sS":
-            self.specularOn = not self.specularOn
-            self.shaderProg.setBool("specularOn", self.specularOn)
+            pass
         if chr(keycode) in "dD":
             pass
         if chr(keycode) in "aA":
             pass
-
 
         # TODO 5.3 is at here
         if chr(keycode) in "tT":
