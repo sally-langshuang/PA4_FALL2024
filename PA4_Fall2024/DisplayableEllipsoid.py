@@ -80,7 +80,6 @@ class DisplayableEllipsoid(Displayable):
         self.vertices = self.generate_ellipsoid_vertices(radiusX, radiusY, radiusZ, stacks, slices, color)
         self.indices = self.generate_ellipsoid_indices(stacks, slices)
 
-
     def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color):
         vertices = np.zeros([stacks * slices, 11])
         arr_stack = np.linspace(0, 2 * np.pi, stacks)
@@ -103,7 +102,7 @@ class DisplayableEllipsoid(Displayable):
                 nx, ny, nz = nx / l, ny / l, nz / l
                 # texture (u, v)
                 u = theta / (2 * np.pi)  # u ∈ [0, 1]
-                v = phi / np.pi  # v ∈ [0, 1]
+                v = phi / (2*np.pi)  # v ∈ [0, 1]
                 vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         return vertices
 
@@ -128,8 +127,6 @@ class DisplayableEllipsoid(Displayable):
                     if not same_pos(right_vertice, current_vertice):
                         indices = np.append(indices, [current_index, right_index, up_index])
         return indices
-
-
 
     def draw(self):
         self.vao.bind()

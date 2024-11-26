@@ -42,12 +42,20 @@ class SceneThree(Component, Animation):
                                  self.glutility.rotate(120, [0, 0, 1], False)]
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
+        cube = Component(Point((-1, 0, 0)), DisplayableCube(shaderProg, 0.5, 0.5, 0.5))
+        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+                      np.array((0.8, 0.6, 0.4, 1.0)), 64)
+        cube.setMaterial(m2)
+        cube.setTexture(shaderProg, "./assets/cloudySphere.jpg")
+        cube.renderingRouting = "texture"
+        self.addChild(cube)
 
         torus = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.1, 0.8, 36, 36))
         m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
-        torus.renderingRouting = "lighting"
+        torus.setTexture(shaderProg, "./assets/marble.jpg")
+        torus.renderingRouting = "texture"
         torus.rotate(90, torus.uAxis)
         self.addChild(torus)
 
@@ -55,7 +63,8 @@ class SceneThree(Component, Animation):
         m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
         sphere.setMaterial(m3)
-        sphere.renderingRouting = "lighting"
+        sphere.setTexture(shaderProg, "./assets/earth.jpg")
+        sphere.renderingRouting = "texture"
         self.addChild(sphere)
 
         l0 = Light(self.lightPos(self.lRadius, self.lAngles[0], self.lTransformations[0]),
