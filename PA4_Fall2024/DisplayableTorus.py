@@ -92,7 +92,7 @@ class DisplayableTorus(Displayable):
         vertices = np.zeros((rings * nsides, 11))
 
         # angle
-        arr_theta = np.linspace(0, 2 * np.pi, rings, endpoint=False)  # 主圆分段
+        arr_theta = np.linspace(0,  2*np.pi, rings, endpoint=False)  # 主圆分段
         arr_phi = np.linspace(0, 2 * np.pi, nsides, endpoint=False)  # 小圆分段
 
         for i, theta in enumerate(arr_theta):
