@@ -16,6 +16,7 @@ import numpy as np
 import ColorType
 from Animation import Animation
 from ModelAxes import ModelAxes
+from PA4_Fall2024.SceneThree import SceneThree
 from PA4_Fall2024.SceneTwo import SceneTwo
 from Point import Point
 from CanvasBase import CanvasBase
@@ -424,11 +425,15 @@ class Sketch(CanvasBase):
         if chr(keycode) in "cC":
             self.backgroundColor = ColorType.BLACK
             self.switchScene(SceneTwo(self.shaderProg))
+        if chr(keycode) in "eE":
+            self.backgroundColor = ColorType.BLACK
+            self.switchScene(SceneThree(self.shaderProg))
         if chr(keycode) in "123456789":
             idx = int(str('%c' % keycode)) - 1
             if idx  < len(self.scene.lights):
                 self.scene.lights[idx].toggle()
                 print(f"light {idx+1} toggle is {self.scene.lights[idx].toggleOn}")
+
 
 
 if __name__ == "__main__":
