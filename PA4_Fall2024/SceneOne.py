@@ -53,7 +53,7 @@ class SceneOne(Component, Animation):
         m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
-        torus.renderingRouting = "normal"
+        torus.renderingRouting = "lighting"
         torus.rotate(90, torus.uAxis)
         self.addChild(torus)
 
@@ -104,6 +104,7 @@ class SceneOne(Component, Animation):
         for c in self.children:
             if isinstance(c, Animation):
                 c.animationUpdate()
+
 
     def initialize(self):
         self.shaderProg.clearAllLights()
