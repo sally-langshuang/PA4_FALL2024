@@ -23,7 +23,7 @@ from DisplayableTorus import DisplayableTorus
 from DisplayableCylinder import DisplayableCylinder
 
 class SceneThree(Component, Animation):
-    lights = None
+    lights = []
     lightCubes = None
     shaderProg = None
     glutility = None
@@ -42,7 +42,7 @@ class SceneThree(Component, Animation):
                                  self.glutility.rotate(120, [0, 0, 1], False)]
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
-        cube = Component(Point((-1, -1, 0)), DisplayableCube(shaderProg, 0.5, 0.5, 0.5))
+        cube = Component(Point((-1, -1, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1))
         m0 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
         cube.setMaterial(m0)
@@ -50,14 +50,26 @@ class SceneThree(Component, Animation):
         cube.renderingRouting = "texture"
         self.addChild(cube)
 
-        torus = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.1, 0.8, 36, 10))
+        torus = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.1, 1.0, 36, 36))
         m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
         torus.setTexture(shaderProg, "./assets/marble.jpg")
         torus.renderingRouting = "texture"
-        torus.rotate(90, torus.uAxis)
+        torus.rotate(60, torus.uAxis)
+        self.torus = torus
         self.addChild(torus)
+
+        torus2 = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.1, 1.4, 36, 36))
+        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+                      np.array((0.8, 0.6, 0.4, 1.0)), 64)
+        torus2.setMaterial(m2)
+        torus2.setTexture(shaderProg, "./assets/marble.jpg")
+        torus2.renderingRouting = "texture"
+        torus2.rotate(90, torus.uAxis)
+        torus2.rotate(30, torus.vAxis)
+        self.torus2 = torus2
+        self.addChild(torus2)
 
         sphere = Component(Point((0, 0, 0)), DisplayableEllipsoid(shaderProg, 0.5, 0.5, 0.5, 36, 36))
         m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
@@ -65,25 +77,10 @@ class SceneThree(Component, Animation):
         sphere.setMaterial(m3)
         sphere.setTexture(shaderProg, "./assets/earth.jpg")
         sphere.renderingRouting = "texture"
+        self.sphere = sphere
         self.addChild(sphere)
 
-        l0 = Light(self.lightPos(self.lRadius, self.lAngles[0], self.lTransformations[0]),
-                   np.array((*ColorType.SOFTRED, 1.0)))
-        lightCube0 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTRED))
-        lightCube0.renderingRouting = "vertex"
-        l1 = Light(self.lightPos(self.lRadius, self.lAngles[1], self.lTransformations[1]),
-                   np.array((*ColorType.SOFTBLUE, 1.0)))
-        lightCube1 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTBLUE))
-        lightCube1.renderingRouting = "vertex"
-        l2 = Light(self.lightPos(self.lRadius, self.lAngles[2], self.lTransformations[2]),
-                   np.array((*ColorType.SOFTGREEN, 1.0)))
-        lightCube2 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTGREEN))
-        lightCube2.renderingRouting = "vertex"
-        self.addChild(lightCube0)
-        self.addChild(lightCube1)
-        self.addChild(lightCube2)
-        self.lights = [l0, l1, l2]
-        self.lightCubes = [lightCube0, lightCube1, lightCube2]
+
 
     def lightPos(self, radius, thetaAng, transformationMatrix):
         r = np.zeros(4)
@@ -107,14 +104,21 @@ class SceneThree(Component, Animation):
             if isinstance(c, Animation):
                 c.animationUpdate()
 
-        # rotation_speed = [1, 1, 1]
-        # for i, comp in enumerate(self.children):
-        #     comp.uAngle = (comp.uAngle + rotation_speed[0]) % 360
-        #     comp.vAngle = (comp.vAngle + rotation_speed[1]) % 360
-        #     comp.wAngle = (comp.wAngle + rotation_speed[2]) % 360
+
+        self.sphere.vAngle =  (self.sphere.vAngle + 1) %360
+        rotation_speed = [0.3, 0.4, 0.5]
+        comp = self.torus
+        comp.uAngle = (comp.uAngle + rotation_speed[0]) % 360
+        comp.vAngle = (comp.vAngle + rotation_speed[1]) % 360
+        comp.wAngle = (comp.wAngle + rotation_speed[2]) % 360
+        rotation_speed = [-0.3, -0.4, 0.2]
+        comp = self.torus2
+        comp.uAngle = (comp.uAngle + rotation_speed[0]) % 360
+        comp.vAngle = (comp.vAngle + rotation_speed[1]) % 360
+        comp.wAngle = (comp.wAngle + rotation_speed[2]) % 360
 
     def initialize(self):
         self.shaderProg.clearAllLights()
-        for i, v in enumerate(self.lights):
-            self.shaderProg.setLight(i, v)
+        # for i, v in enumerate(self.lights):
+        #     self.shaderProg.setLight(i, v)
         super().initialize()
