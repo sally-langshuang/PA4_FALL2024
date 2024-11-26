@@ -32,25 +32,26 @@ class Light:
         if color is not None:
             self.setColor(color)
         else:
-            self.color = np.array((0, 0, 0, 0))
+            self.setColor(np.array((0, 0, 0, 0)))
 
+        self.toggleOn = True
         # init radial attenuation parameters
         if infiniteDirection is not None:
             self.infiniteOn = True
             self.setInfiniteDirection(infiniteDirection)
         else:
             self.radialOn = False
-            self.infiniteDirection = np.array((0, 0, 0))
+            self.setInfiniteDirection(np.array((0, 0, 0)))
 
         # init spot light parameters
         if spotDirection is not None:
             self.spotOn = True
             self.setSpotDirection(spotDirection)
-            self.setSpotRadialFactor(spotRadialFactor if (spotDirection is not None) else np.array((0, 0, 0)))
+            self.setSpotRadialFactor(spotRadialFactor)
         else:
             self.spotOn = False
-            self.spotDirection = np.array((0, 0, 0))
-            self.spotRadialFactor = np.array((0, 0, 0))
+            self.setSpotDirection(np.array((0, 0, 0)))
+            self.setSpotRadialFactor(np.array((0, 0, 0)))
         self.setSpotAngleLimit(spotAngleLimit)
 
     def __repr__(self):
@@ -58,10 +59,25 @@ class Light:
         {self.infiniteOn},{self.infiniteDirection},\
         {self.spotOn},{self.spotDirection}, {self.spotRadialFactor},{self.spotAngleLimit}"
 
+    def toggle(self):
+        self.toggleOn = not self.toggleOn
+        if self.toggleOn:
+            self.color = self.defaultColor
+            self.infiniteDirection = self.defaultInfiniteDirection
+            self.spotDirection = self.defaultSpotDirection
+            self.spotRadialFactor = self.defaultspotRadialFactor
+        else:
+            self.color = np.array((0, 0, 0, 0))
+            self.infiniteDirection = np.array((0, 0, 0))
+            self.spotDirection = np.array((0, 0, 0))
+            self.spotRadialFactor = np.array((0, 0, 0))
+
+
     def setColor(self, color):
         if (not isinstance(color, np.ndarray)) or color.size != 4:
             raise TypeError("color must be a size 4 ndarray")
         self.color = color
+        self.defaultColor = color
 
     def setPosition(self, position):
         if (not isinstance(position, np.ndarray)) and (not isinstance(position, Point)):
@@ -86,11 +102,14 @@ class Light:
             if infiniteDirection.coords.size != 3:
                 raise TypeError("infiniteDirection must be a size 3 Point")
             self.infiniteDirection = infiniteDirection.coords
+        self.defaultInfiniteDirection = self.infiniteDirection
+
 
     def setSpotRadialFactor(self, spotRadialFactor):
         if (not isinstance(spotRadialFactor, np.ndarray)) or spotRadialFactor.size != 3:
             raise TypeError("spotRadialFactor must be a size 3 ndarray")
         self.spotRadialFactor = spotRadialFactor
+        self.defaultspotRadialFactor = self.spotRadialFactor
 
     def setSpotAngleLimit(self, spotAngleLimit):
         if not type(spotAngleLimit) in [int, float]:
@@ -100,6 +119,7 @@ class Light:
     def setSpotDirection(self, spotDirection):
         if (not isinstance(spotDirection, np.ndarray)) and (not isinstance(spotDirection, Point)):
             raise TypeError("spotDirection must be ndarray/Point")
+
         if isinstance(spotDirection, np.ndarray):
             if spotDirection.size != 3:
                 raise TypeError("spotDirection must be a size 3 ndarray")
@@ -108,3 +128,5 @@ class Light:
             if spotDirection.coords.size != 3:
                 raise TypeError("spotDirection must be a size 3 Point")
             self.spotDirection = spotDirection.coords
+        self.defaultSpotDirection = self.spotDirection
+

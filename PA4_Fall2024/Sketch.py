@@ -424,14 +424,11 @@ class Sketch(CanvasBase):
         if chr(keycode) in "cC":
             self.backgroundColor = ColorType.BLACK
             self.switchScene(SceneTwo(self.shaderProg))
-        if chr(keycode) in '1':
-            pass
-        if chr(keycode) in '2':
-            pass
-        if chr(keycode) in '3':
-            pass
-        if chr(keycode) in '4':
-            pass
+        if chr(keycode) in "123456789":
+            idx = int(str('%c' % keycode)) - 1
+            if idx  < len(self.scene.lights):
+                self.scene.lights[idx].toggle()
+                print(f"light {idx+1} toggle is {self.scene.lights[idx].toggleOn}")
 
 
 if __name__ == "__main__":
