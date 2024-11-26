@@ -98,6 +98,9 @@ class Sketch(CanvasBase):
     ImageModeOn = False
     start_time = None
     left_mouse_down = 0
+    specularOn = True
+    ambientOn = True
+    diffuseOn = True
 
     texture = None
     shaderProg = None
@@ -159,6 +162,9 @@ class Sketch(CanvasBase):
 
     def switchScene(self, scene):
         self.scene = scene
+        self.shaderProg.setBool("specularOn", self.specularOn)
+        self.shaderProg.setBool("ambientOn", self.ambientOn)
+        self.shaderProg.setBool("diffuseOn", self.diffuseOn)
         self.topLevelComponent.clear()
         self.topLevelComponent.addChild(self.scene)
         self.topLevelComponent.initialize()
@@ -411,12 +417,19 @@ class Sketch(CanvasBase):
             self.ImageModeOn = not self.ImageModeOn
             self.shaderProg.setBool("imageFlag", self.ImageModeOn)
         # TODO 4.2 is at here
-        if chr(keycode) in "sS":
-            pass
-        if chr(keycode) in "dD":
-            pass
-        if chr(keycode) in "aA":
-            pass
+        if chr(keycode) in "S":
+            self.specularOn = not self.specularOn
+            self.shaderProg.setBool("specularOn", self.specularOn)
+            print(f"--> specularOn: {self.specularOn}, diffuseOn: {self.diffuseOn}, ambientOn: {self.ambientOn}")
+        if chr(keycode) in "D":
+            self.diffuseOn = not self.diffuseOn
+            self.shaderProg.setBool("diffuseOn", self.diffuseOn)
+            print(f"specularOn: {self.specularOn}, -->diffuseOn: {self.diffuseOn}, ambientOn: {self.ambientOn}")
+        if chr(keycode) in "A":
+            self.ambientOn = not self.ambientOn
+            self.shaderProg.setBool("ambientOn", self.ambientOn)
+            print(f"specularOn: {self.specularOn}, diffuseOn: {self.diffuseOn}, -->ambientOn: {self.ambientOn}")
+
 
         # TODO 5.3 is at here
         if chr(keycode) in "tT":

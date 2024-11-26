@@ -79,8 +79,25 @@ class SceneTwo(Component, Animation):
         ellipsoid.renderingRouting = "normal"
         self.addChild(ellipsoid)
 
-        self.lights = []
-        self.lightCubes = []
+
+        l0 = Light(self.lightPos(self.lRadius, self.lAngles[0], self.lTransformations[0]),
+                   np.array((*ColorType.SOFTRED, 1.0)))
+        lightCube0 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTRED))
+        lightCube0.renderingRouting = "vertex"
+        l1 = Light(self.lightPos(self.lRadius, self.lAngles[1], self.lTransformations[1]),
+                   np.array((*ColorType.SOFTBLUE, 1.0)))
+        lightCube1 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTBLUE))
+        lightCube1.renderingRouting = "vertex"
+        l2 = Light(self.lightPos(self.lRadius, self.lAngles[2], self.lTransformations[2]),
+                   np.array((*ColorType.SOFTGREEN, 1.0)))
+        lightCube2 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTGREEN))
+        lightCube2.renderingRouting = "vertex"
+
+        self.addChild(lightCube0)
+        self.addChild(lightCube1)
+        self.addChild(lightCube2)
+        self.lights = [l0, l1, l2]
+        # self.lightCubes = [lightCube0, lightCube1, lightCube2]
 
     def lightPos(self, radius, thetaAng, transformationMatrix):
         r = np.zeros(4)
@@ -96,7 +113,7 @@ class SceneTwo(Component, Animation):
         self.lAngles[2] = (self.lAngles[2] + 1.0) % 360
         for i, v in enumerate(self.lights):
             lPos = self.lightPos(self.lRadius, self.lAngles[i], self.lTransformations[i])
-            self.lightCubes[i].setCurrentPosition(Point(lPos))
+            # self.lightCubes[i].setCurrentPosition(Point(lPos))
             self.lights[i].setPosition(lPos)
             self.shaderProg.setLight(i, v)
 

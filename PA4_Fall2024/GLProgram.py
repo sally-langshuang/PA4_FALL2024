@@ -90,6 +90,10 @@ class GLProgram:
             "iResolution": "iResolution",
             "iMouse": "iMouse",
             "iTime": "iTime",
+
+            "specularOn": "specularOn",
+            "ambientOn": "ambientOn",
+            "diffuseOn": "diffuseOn",
         }
         self.attribs["diffuse"] = self.attribs["material"] + ".diffuse"
         self.attribs["specular"] = self.attribs["material"] + ".specular"
@@ -203,6 +207,9 @@ class GLProgram:
         uniform Light {self.attribs["light"]}[MAX_LIGHT_NUM];
         
         uniform bool imageFlag;
+        uniform bool specularOn;
+        uniform bool ambientOn;
+        uniform bool diffuseOn;
         uniform vec3 iResolution;
         uniform vec3 iMouse;
         uniform float iTime;
@@ -244,7 +251,8 @@ class GLProgram:
             
             // Reserved for illumination rendering, routing name is "lighting" or "illumination"
             if ((renderingFlag >> 0 & 0x1) == 1){{
-                vec4 result = vec4(vColor, 1.0);
+                // vec4 result = vec4(vColor, 1.0);
+                vec4 result = vec4(0.0);
 
                 ////////// TODO 3: Illuminate your meshes
                 // Requirements:
@@ -319,7 +327,16 @@ class GLProgram:
 
                 }}
                 // Combine the contributions: Ambient, Diffuse, and Specular
-                result = ambientColor + diffuseColor + specularColor;
+                if (specularOn) {{
+                    result += specularColor;
+                }}
+                if (ambientOn) {{
+                    result += ambientColor;
+                }}
+                if (diffuseOn) {{
+                    result += diffuseColor;
+                }}
+                //result += ambientColor + diffuseColor + specularColor;
             
                 
                 results[ri] = result;

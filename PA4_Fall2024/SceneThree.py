@@ -45,6 +45,7 @@ class SceneThree(Component, Animation):
         self.cubes = []
         self.cube_radius = 0.8
         cube_num = 8
+        ## TODO 6.2
         for i in range(cube_num):
             theta = i * (360 / cube_num)
             x = self.cube_radius * np.cos(theta/360*(2*np.pi))
@@ -54,7 +55,7 @@ class SceneThree(Component, Animation):
                           np.array((0.6, 0.4, 0.8, 1.0)), 64)
             cube.rotate(theta, cube.vAxis)
             cube.setMaterial(m0)
-            cube.setTexture(shaderProg, "./assets/cloudySphere.jpg")
+            cube.setTexture(shaderProg, "./assets/stoneWall.jpg")
             cube.renderingRouting = "texture"
             self.addChild(cube)
             self.cubes.append(cube)
@@ -89,9 +90,25 @@ class SceneThree(Component, Animation):
         self.sphere = sphere
         self.addChild(sphere)
 
+
         l0 = Light(self.lightPos(self.lRadius, self.lAngles[0], self.lTransformations[0]),
                    np.array((*ColorType.SOFTRED, 1.0)))
-        self.lights = [l0]
+        lightCube0 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTRED))
+        lightCube0.renderingRouting = "vertex"
+        l1 = Light(self.lightPos(self.lRadius, self.lAngles[1], self.lTransformations[1]),
+                   np.array((*ColorType.SOFTBLUE, 1.0)))
+        lightCube1 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTBLUE))
+        lightCube1.renderingRouting = "vertex"
+        l2 = Light(self.lightPos(self.lRadius, self.lAngles[2], self.lTransformations[2]),
+                   np.array((*ColorType.SOFTGREEN, 1.0)))
+        lightCube2 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTGREEN))
+        lightCube2.renderingRouting = "vertex"
+
+        self.addChild(lightCube0)
+        self.addChild(lightCube1)
+        self.addChild(lightCube2)
+        self.lights = [l0, l1, l2]
+        # self.lightCubes = [lightCube0, lightCube1, lightCube2]
 
 
 
