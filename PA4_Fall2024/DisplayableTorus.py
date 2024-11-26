@@ -117,38 +117,6 @@ class DisplayableTorus(Displayable):
 
         return vertices
 
-    def _generate_torus_vertices(self, outerRadius, innerRadius, rings, nsides, color):
-        # x, y, z, nx, ny, nz, r, g, b, u, v
-        vertices = np.zeros((rings * nsides, 11))
-
-        # angle divide
-        arr_theta = np.linspace(0, 2 * np.pi, rings, endpoint=False)  # main circle
-        arr_phi = np.linspace(0, 2 * np.pi, nsides, endpoint=False)  # small circle
-
-        for i, theta in enumerate(arr_theta):
-            for j, phi in enumerate(arr_phi):
-                # n vector
-                nx = (outerRadius - innerRadius) / 2 * np.sin(phi) * np.cos(theta)
-                ny = (outerRadius - innerRadius) / 2 * np.cos(phi)
-                nz = (outerRadius - innerRadius) / 2 * np.sin(phi) * np.sin(theta)
-                # pos
-                x = (outerRadius + innerRadius) / 2 * np.cos(theta) + nx
-                y = 0 + ny
-                z = (outerRadius + innerRadius) /2 * np.sin(theta) + nz
-
-                n_l = math.sqrt( nx ** 2 + ny ** 2 + nz ** 2)
-                nx, ny, nz = nx/n_l, ny/n_l, nz/n_l
-
-                # texture (u, v)
-                u = i / (rings - 1)
-                v = j / (nsides - 1)
-
-                # index
-                k = i * nsides + j
-                vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
-
-        return vertices
-
     def generate_torus_indices(self, rings, nsides):
         # 初始化索引列表
         indices = []
@@ -191,5 +159,7 @@ class DisplayableTorus(Displayable):
                                   stride=11, offset=3, attribSize=3)
         self.vbo.setAttribPointer(self.shaderProg.getAttribLocation("vertexColor"),
                                   stride=11, offset=6, attribSize=3)
+        self.vbo.setAttribPointer(self.shaderProg.getAttribLocation("vertexTexture"),
+                                  stride=11, offset=9, attribSize=2)
 
         self.vao.unbind()

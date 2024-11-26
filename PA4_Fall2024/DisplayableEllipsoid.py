@@ -82,10 +82,8 @@ class DisplayableEllipsoid(Displayable):
 
     def generate_ellipsoid_vertices(self, a, b, c, stacks, slices,  color):
         vertices = np.zeros([stacks * slices, 11])
-        arr_stack = np.linspace(0, 2 * np.pi, stacks)
+        arr_stack = np.linspace(0, np.pi, stacks)
         arr_slice = np.linspace(0, 2 * np.pi, slices)
-        north = np.array([0, b, 0, 0, 0, 0, *color, 0, 0])
-        south = np.array([0, -b, 0, 0, 0, 0, *color, 0, 0])
         index_func = lambda i, j: i * slices + j
         for i in range(stacks):
             phi = arr_stack[i]  # φ方向分层
@@ -101,8 +99,8 @@ class DisplayableEllipsoid(Displayable):
                 l = np.linalg.norm(np.array([nx, ny, nz]))
                 nx, ny, nz = nx / l, ny / l, nz / l
                 # texture (u, v)
-                u = theta / (2 * np.pi)  # u ∈ [0, 1]
-                v = phi / (2*np.pi)  # v ∈ [0, 1]
+                u = 1 - (theta) / (2 * np.pi)  # u ∈ [0, 1]
+                v = abs(phi-np.pi) / (np.pi)  # v ∈ [0, 1]
                 vertices[k] = np.array([x, y, z, nx, ny, nz, *color, u, v])
         return vertices
 
@@ -120,7 +118,7 @@ class DisplayableEllipsoid(Displayable):
                     up_left_index, = index_func(i - 1, j - 1),
                     up_left_vertice = self.vertices[up_left_index]
                     if not same_pos(up_left_vertice, up_vertice):
-                        indices = np.append(indices, [up_left_index, up_index, current_index])
+                        indices = np.append(indices, [up_left_index,  current_index, up_index])
                 if j < slices - 1:
                     right_index = index_func(i, j + 1)
                     right_vertice = self.vertices[right_index]

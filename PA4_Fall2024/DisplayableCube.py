@@ -84,11 +84,11 @@ class DisplayableCube(Displayable):
 
             # front face
             -length / 2, -width / 2, height / 2, 0, 0, 1, *color, 0, 0,
-            length / 2, -width / 2, height / 2, 0, 0, 1, *color, 1, 0,
+            length / 2, -width / 2, height / 2, 0, 0, 1, *color, 0, 1,
             length / 2, width / 2, height / 2, 0, 0, 1, *color, 1, 1,
             -length / 2, -width / 2, height / 2, 0, 0, 1, *color, 0, 0,
             length / 2, width / 2, height / 2, 0, 0, 1, *color, 1, 1,
-            -length / 2, width / 2, height / 2, 0, 0, 1, *color, 0, 1,
+            -length / 2, width / 2, height / 2, 0, 0, 1, *color, 1, 0,
 
             # left face
             -length / 2, -width / 2, -height / 2, -1, 0, 0, *color, 0, 0,
@@ -115,9 +115,10 @@ class DisplayableCube(Displayable):
             -length / 2, -width / 2, -height / 2, 0, -1, 0, *color, 0, 0,
             length / 2, -width / 2, -height / 2, 0, -1, 0, *color, 1, 0,
             length / 2, -width / 2, height / 2, 0, -1, 0, *color, 1, 1,
+
             -length / 2, -width / 2, -height / 2, 0, -1, 0, *color, 0, 0,
-            length / 2, -width / 2, height / 2, 0, -1, 0, *color, 1, 0,
-            -length / 2, -width / 2,height / 2, 0, -1, 0, *color, 0, 0,
+            length / 2, -width / 2, height / 2, 0, -1, 0, *color, 1, 1,
+            -length / 2, -width / 2,height / 2, 0, -1, 0, *color, 0, 1,
         ]).reshape((36, 11))
 
         self.vertices[0:36, 0:11] = vl
@@ -148,6 +149,8 @@ class DisplayableCube(Displayable):
                                   stride=11, offset=3, attribSize=3)
         self.vbo.setAttribPointer(self.shaderProg.getAttribLocation("vertexColor"),
                                   stride=11, offset=6, attribSize=3)
+        self.vbo.setAttribPointer(self.shaderProg.getAttribLocation("vertexTexture"),
+                                  stride=11, offset=9, attribSize=2)
         # TODO/BONUS 6.1 is at here, you need to set attribPointer for texture coordinates
         # you should check the corresponding variable name in GLProgram and set the pointer
         self.vao.unbind()
