@@ -42,14 +42,8 @@ class SceneThree(Component, Animation):
                                  self.glutility.rotate(120, [0, 0, 1], False)]
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
-        cube = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 1.0))
-        m1 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
-                      np.array((0.4, 0.8, 0.6, 0.1)), 64)
-        cube.setMaterial(m1)
-        cube.renderingRouting = "lighting"
-        self.addChild(cube)
 
-        torus = Component(Point((1, 0, 0)), DisplayableTorus(shaderProg, 0.15, 0.3, 36, 36))
+        torus = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.1, 0.8, 36, 36))
         m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
@@ -57,7 +51,7 @@ class SceneThree(Component, Animation):
         torus.rotate(90, torus.uAxis)
         self.addChild(torus)
 
-        sphere = Component(Point((-1, 0, 0)), DisplayableEllipsoid(shaderProg, 0.4, 0.4, 0.4, 36, 36))
+        sphere = Component(Point((0, 0, 0)), DisplayableEllipsoid(shaderProg, 0.5, 0.5, 0.5, 36, 36))
         m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
         sphere.setMaterial(m3)
@@ -76,7 +70,6 @@ class SceneThree(Component, Animation):
                    np.array((*ColorType.SOFTGREEN, 1.0)))
         lightCube2 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTGREEN))
         lightCube2.renderingRouting = "vertex"
-
         self.addChild(lightCube0)
         self.addChild(lightCube1)
         self.addChild(lightCube2)
@@ -105,6 +98,11 @@ class SceneThree(Component, Animation):
             if isinstance(c, Animation):
                 c.animationUpdate()
 
+        # rotation_speed = [1, 1, 1]
+        # for i, comp in enumerate(self.children):
+        #     comp.uAngle = (comp.uAngle + rotation_speed[0]) % 360
+        #     comp.vAngle = (comp.vAngle + rotation_speed[1]) % 360
+        #     comp.wAngle = (comp.wAngle + rotation_speed[2]) % 360
 
     def initialize(self):
         self.shaderProg.clearAllLights()
