@@ -16,6 +16,7 @@ import numpy as np
 import ColorType
 from Animation import Animation
 from ModelAxes import ModelAxes
+from PA4_Fall2024.SceneTwo import SceneTwo
 from Point import Point
 from CanvasBase import CanvasBase
 from GLProgram import GLProgram
@@ -95,8 +96,6 @@ class Sketch(CanvasBase):
     # Image mode
     ImageModeOn = False
     specularOn = True
-    diffuseOn = True
-    ambientOn = True
     start_time = None
     left_mouse_down = 0
 
@@ -189,8 +188,6 @@ class Sketch(CanvasBase):
         self.shaderProg.setVec3("viewPosition", np.array(self.getCameraPos()))
         self.shaderProg.setBool("imageFlag", self.ImageModeOn)
         self.shaderProg.setBool("specularOn", self.specularOn)
-        self.shaderProg.setBool("diffuseOn", self.diffuseOn)
-        self.shaderProg.setBool("ambientOn", self.ambientOn)
 
     def getCameraPos(self):
         ct = math.cos(self.cameraTheta)
@@ -419,14 +416,26 @@ class Sketch(CanvasBase):
             self.specularOn = not self.specularOn
             self.shaderProg.setBool("specularOn", self.specularOn)
         if chr(keycode) in "dD":
-            self.diffuseOn = not self.diffuseOn
-            self.shaderProg.setBool("diffuseOn", self.diffuseOn)
+            pass
         if chr(keycode) in "aA":
-            self.ambientOn = not self.ambientOn
-            self.shaderProg.setBool("ambientOn", self.ambientOn)
+            pass
 
 
         # TODO 5.3 is at here
+        if chr(keycode) in "tT":
+            self.backgroundColor = ColorType.BLUEGREEN
+            self.switchScene(SceneOne(self.shaderProg))
+        if chr(keycode) in "cC":
+            self.backgroundColor = ColorType.BLACK
+            self.switchScene(SceneTwo(self.shaderProg))
+        if chr(keycode) in '1':
+            pass
+        if chr(keycode) in '2':
+            pass
+        if chr(keycode) in '3':
+            pass
+        if chr(keycode) in '4':
+            pass
 
 
 if __name__ == "__main__":

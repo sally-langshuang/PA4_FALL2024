@@ -68,9 +68,7 @@ class GLProgram:
 
         # define attribs name and corresponding method to set it
         self.attribs = {
-            "specularOn": "speularOn",
-            "diffuseOn": "diffuseOn",
-            "ambientOn": "ambientOn",
+            "specularOn": "specularOn",
 
             "vertexPos": "aPos",
             "vertexNormal": "aNormal",
@@ -151,8 +149,6 @@ class GLProgram:
         
         uniform bool imageFlag;
         uniform bool specularOn;
-        uniform bool diffuseOn;
-        uniform bool ambientOn;
 
         void main()
         {{
@@ -211,8 +207,6 @@ class GLProgram:
         
         uniform bool imageFlag;
         uniform bool specularOn;
-        uniform bool diffuseOn;
-        uniform bool ambientOn;
         uniform vec3 iResolution;
         uniform vec3 iMouse;
         uniform float iTime;
@@ -330,16 +324,8 @@ class GLProgram:
                 }}
                 // Combine the contributions: Ambient, Diffuse, and Specular
                 //result = ambientColor + diffuseColor + specularColor;
-                if (specularOn) {{
-                    result += specularColor;
-                }}
-                if (diffuseOn) {{
-                    result += diffuseColor;
-                }}
-                if (ambientOn) {{
-                    result += ambientColor;
-                }}
-
+                result +=  ambientColor;
+                
                 results[ri] = result;
                 ri+=1;
             }}
