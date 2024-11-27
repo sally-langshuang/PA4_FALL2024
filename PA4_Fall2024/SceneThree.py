@@ -86,7 +86,7 @@ class SceneThree(Component, Animation):
                       np.array((0.6, 0.4, 0.8, 1.0)), 64)
         sphere.setMaterial(m3)
         sphere.setTexture(shaderProg, "./assets/earth.jpg")
-        sphere.renderingRouting = "texture"
+        sphere.renderingRouting = "custom"
         self.sphere = sphere
         self.addChild(sphere)
 

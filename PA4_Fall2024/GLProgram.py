@@ -392,6 +392,98 @@ class GLProgram:
                 ri+=1;
             }}
             
+            if  ((renderingFlag >> 9 & 0x1) == 1){{
+               vec4 result = vec4(0.0);
+
+                ////////// TODO 3: Illuminate your meshes
+                // Requirements:
+                //   Use the illumination equations we learned in the lecture to implement components for Diffuse, 
+                //   Specular, and Ambient. You’ll implement the missing part in the Fragment shader source code. 
+                //   This part will be implemented in OpenGL Shading Language. Your code should iterate through 
+                //   all lights in the Light array.
+                vec4 ambientColor = vec4(0.0);
+                vec4 diffuseColor = vec4(0.0);
+                vec4 specularColor = vec4(0.0);
+
+                for (int i = 0; i < MAX_LIGHT_NUM; i++) {{
+                    Light currentLight = {self.attribs["light"]}[i];  // 获取当前光源
+                    ambientColor += currentLight.color * {self.attribs["material"]}.ambient;
+                    
+                    // Compute light direction and normalize it
+                    vec3 lightDir = normalize(currentLight.position - vPos);  // 光源方向
+                    vec3 viewDir = normalize({self.attribs["viewPosition"]} - vPos);  // 视角方向
+                    // Diffuse lighting: Lambertian reflection model (Dot product of normal and light direction)
+                    float diff = max(dot(vNormal, lightDir), 0.0);  // 点积计算
+                    diffuseColor += currentLight.color * {self.attribs["material"]}.diffuse * diff;
+                    
+                    // Specular lighting: Blinn-Phong reflection model (View and light direction reflection)
+                    vec3 reflectDir = reflect(-lightDir, vNormal);  // 反射方向
+                    float spec = pow(max(dot(viewDir, reflectDir), 0.0), {self.attribs["material"]}.highlight);
+                    specularColor += currentLight.color * {self.attribs["material"]}.specular * spec;
+                    
+                    ////////// TODO 4: Set up lights
+                    // Requirements:
+                    //   * Use the Light struct which is defined above and the provided Light class to implement 
+                    //   illumination equations for 3 different light sources: Point light, Infinite light, 
+                    //   Spotlight with radial and angular attenuation
+                    //   * In the Sketch.py file Interrupt_keyboard method, bind keyboard interfaces that allows 
+                    //   the user to toggle on/off specular, diffuse, and ambient with keys S, D, A.
+                    // 点光源计算
+                    //if (currentLight.pointOn) {{
+                        // 从光源到片段的方向向量
+                        //vec3 lightDir = normalize(currentLight.position - fragPosition);
+                        
+                        // 计算光源到片段的距离
+                        //float distance = length(currentLight.position - fragPosition);
+                        // 计算径向衰减
+                        //float attenuation = 1.0 / (currentLight.attenuation.x + currentLight.attenuation.y * distance + currentLight.attenuation.z * distance * distance);
+                        // 计算镜面反射
+                        // vec3 reflectDir = reflect(-lightDir, vNormal);  // 反射方向
+                        // float spec = pow(max(dot(viewDir, reflectDir), 0.0), {{self.attribs["material"]}}.highlight);
+                        // specularColor += attenuation * currentLight.color * {{self.attribs["material"]}}.specular * spec;
+
+                    //}}
+                    // Spotlight (if spotOn is true)
+                    if (currentLight.spotOn) {{
+                        // Compute spotlight attenuation based on the angle and direction
+                        float theta = dot(lightDir, normalize(currentLight.spotDirection));  // 光照角度
+                        if (theta > cos(currentLight.spotAngleLimit)) {{
+                            float attenuation = pow(theta, currentLight.spotRadialFactor.x);
+                            diffuseColor *= attenuation;
+                            specularColor *= attenuation;
+                        }}
+                    }}
+                    
+                    // Infinite light (if infiniteOn is true)
+                    if (currentLight.infiniteOn) {{
+                        // Infinite light direction is constant, use it directly
+                        lightDir = normalize(currentLight.infiniteDirection);  // 使用平行光方向
+                        diff = max(dot(vNormal, lightDir), 0.0);  // 计算漫反射
+                        diffuseColor += currentLight.color * {self.attribs["material"]}.diffuse * diff;
+
+                        reflectDir = reflect(-lightDir, vNormal);  // 计算反射光
+                        spec = pow(max(dot(viewDir, reflectDir), 0.0), {self.attribs["material"]}.highlight);
+                        specularColor += currentLight.color * {self.attribs["material"]}.specular * spec;
+                    }}
+
+                }}
+                // Combine the contributions: Ambient, Diffuse, and Specular
+                if (specularOn) {{
+                    result += specularColor;
+                }}
+                if (ambientOn) {{
+                    result += ambientColor;
+                }}
+                if (diffuseOn) {{
+                    result += diffuseColor;
+                }}
+                //result += ambientColor + diffuseColor + specularColor;
+            
+                result += texture({self.attribs["textureImage"]}, vTexture);
+                results[ri] = result;
+                ri+=1;
+            }}
+            
             // Mix all result in results array
             vec4 outputResult=vec4(0.0);
             for(int i=0; i<ri; i++){{
