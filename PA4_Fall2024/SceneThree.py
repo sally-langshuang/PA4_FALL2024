@@ -37,9 +37,6 @@ class SceneThree(Component, Animation):
         self.shaderProg = shaderProg
         self.glutility = GLUtility.GLUtility()
 
-        self.lTransformations = [self.glutility.translate(0, 2, 0, False),
-                                 self.glutility.rotate(60, [0, 0, 1], False),
-                                 self.glutility.rotate(120, [0, 0, 1], False)]
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
         self.cubes = []
@@ -51,66 +48,66 @@ class SceneThree(Component, Animation):
             x = self.cube_radius * np.cos(theta/360*(2*np.pi))
             z = -self.cube_radius * np.sin(theta/360*(2*np.pi))
             cube = Component(Point((x, 0, z)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1))
-            m0 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
-                          np.array((0.6, 0.4, 0.8, 1.0)), 64)
+            m0 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.7, 0.2, 0.2, 1)),
+                          np.array((0.7, 0.4, 0.8, 1.0)), 64)
             cube.rotate(theta, cube.vAxis)
             cube.setMaterial(m0)
             cube.setTexture(shaderProg, "./assets/stoneWall.jpg")
-            cube.renderingRouting = "texture"
+            cube.renderingRouting = "lighttexture"
             self.addChild(cube)
             self.cubes.append(cube)
 
         torus = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.05, 1.0, 36, 36))
-        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.9, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
         torus.setTexture(shaderProg, "./assets/marble.jpg")
-        torus.renderingRouting = "texture"
+        torus.renderingRouting = "lighttexture"
         torus.rotate(60, torus.uAxis)
         self.torus = torus
         self.addChild(torus)
 
         torus2 = Component(Point((0, 0, 0)), DisplayableTorus(shaderProg, 0.05, 1.2, 36, 36))
-        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.8, 0.2, 0.2, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus2.setMaterial(m2)
         torus2.setTexture(shaderProg, "./assets/marble.jpg")
-        torus2.renderingRouting = "texture"
+        torus2.renderingRouting = "lighttexture"
         torus2.rotate(90, torus.uAxis)
         torus2.rotate(30, torus.vAxis)
         self.torus2 = torus2
         self.addChild(torus2)
 
         sphere = Component(Point((0, 0, 0)), DisplayableEllipsoid(shaderProg, 0.5, 0.5, 0.5, 36, 36))
-        m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
-                      np.array((0.6, 0.4, 0.8, 1.0)), 64)
+        m3 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((1, 0.2, 0.2, 1)),
+                      np.array((0.8, 0.4, 0.8, 1.0)), 64)
         sphere.setMaterial(m3)
         sphere.setTexture(shaderProg, "./assets/earth.jpg")
-        sphere.renderingRouting = "custom"
+        sphere.renderingRouting = "lighttexture"
         self.sphere = sphere
         self.addChild(sphere)
 
-
+        self.lTransformations = [self.glutility.translate(0, 2, 0, False),
+                                 self.glutility.rotate(60, [0, 0, 1], False),
+                                 self.glutility.rotate(120, [0, 0, 1], False)]
         l0 = Light(self.lightPos(self.lRadius, self.lAngles[0], self.lTransformations[0]),
                    np.array((*ColorType.SOFTRED, 1.0)))
-        lightCube0 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTRED))
+        lightCube0 = Component(Point((0, 0, 0)), DisplayableEllipsoid(shaderProg, 0.1, 0.1, 0.1, color=ColorType.SOFTRED))
         lightCube0.renderingRouting = "vertex"
         l1 = Light(self.lightPos(self.lRadius, self.lAngles[1], self.lTransformations[1]),
                    np.array((*ColorType.SOFTBLUE, 1.0)))
-        lightCube1 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTBLUE))
+        lightCube1 = Component(Point((0, 0, 0)), DisplayableEllipsoid(shaderProg, 0.1, 0.1, 0.1, color=ColorType.SOFTBLUE))
         lightCube1.renderingRouting = "vertex"
         l2 = Light(self.lightPos(self.lRadius, self.lAngles[2], self.lTransformations[2]),
                    np.array((*ColorType.SOFTGREEN, 1.0)))
-        lightCube2 = Component(Point((0, 0, 0)), DisplayableCube(shaderProg, 0.1, 0.1, 0.1, ColorType.SOFTGREEN))
+        lightCube2 = Component(Point((0, 0, 0)), DisplayableEllipsoid(shaderProg, 0.1, 0.1, 0.1, color=ColorType.SOFTGREEN))
         lightCube2.renderingRouting = "vertex"
 
         self.addChild(lightCube0)
         self.addChild(lightCube1)
         self.addChild(lightCube2)
         self.lights = [l0, l1, l2]
-        # self.lightCubes = [lightCube0, lightCube1, lightCube2]
-
-
+        self.lightCubes = [lightCube0, lightCube1, lightCube2]
 
 
     def lightPos(self, radius, thetaAng, transformationMatrix):
@@ -127,7 +124,7 @@ class SceneThree(Component, Animation):
         self.lAngles[2] = (self.lAngles[2] + 1.0) % 360
         for i, v in enumerate(self.lights):
             lPos = self.lightPos(self.lRadius, self.lAngles[i], self.lTransformations[i])
-            # self.lightCubes[i].setCurrentPosition(Point(lPos))
+            self.lightCubes[i].setCurrentPosition(Point(lPos))
             self.lights[i].setPosition(lPos)
             self.shaderProg.setLight(i, v)
 

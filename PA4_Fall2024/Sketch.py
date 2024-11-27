@@ -101,6 +101,7 @@ class Sketch(CanvasBase):
     specularOn = True
     ambientOn = True
     diffuseOn = True
+    selected_light_idx = -1
 
     texture = None
     shaderProg = None
@@ -417,15 +418,15 @@ class Sketch(CanvasBase):
             self.ImageModeOn = not self.ImageModeOn
             self.shaderProg.setBool("imageFlag", self.ImageModeOn)
         # TODO 4.2 is at here
-        if chr(keycode) in "S":
+        if chr(keycode) in "sS":
             self.specularOn = not self.specularOn
             self.shaderProg.setBool("specularOn", self.specularOn)
             print(f"--> specularOn: {self.specularOn}, diffuseOn: {self.diffuseOn}, ambientOn: {self.ambientOn}")
-        if chr(keycode) in "D":
+        if chr(keycode) in "dD":
             self.diffuseOn = not self.diffuseOn
             self.shaderProg.setBool("diffuseOn", self.diffuseOn)
             print(f"specularOn: {self.specularOn}, -->diffuseOn: {self.diffuseOn}, ambientOn: {self.ambientOn}")
-        if chr(keycode) in "A":
+        if chr(keycode) in "aA":
             self.ambientOn = not self.ambientOn
             self.shaderProg.setBool("ambientOn", self.ambientOn)
             print(f"specularOn: {self.specularOn}, diffuseOn: {self.diffuseOn}, -->ambientOn: {self.ambientOn}")
@@ -441,11 +442,36 @@ class Sketch(CanvasBase):
         if chr(keycode) in "eE":
             self.backgroundColor = ColorType.BLACK
             self.switchScene(SceneThree(self.shaderProg))
-        if chr(keycode) in "123456789":
-            idx = int(str('%c' % keycode)) - 1
+        if chr(keycode) in "0123456789":
+            idx = int(str('%c' % keycode))
             if idx  < len(self.scene.lights):
                 self.scene.lights[idx].toggle()
-                print(f"light {idx+1} toggle is {self.scene.lights[idx].toggleOn}")
+                self.shaderProg.setLight(idx, self.scene.lights[idx])
+                print(f"light {idx} toggle is {self.scene.lights[idx].toggleOn}")
+        if chr(keycode) in "nN":
+            if len(self.scene.lights) > 0:
+                self.selected_light_idx = (self.selected_light_idx + 1)% len(self.scene.lights)
+                print(f"select light {self.selected_light_idx}")
+        if chr(keycode) in "xXyYzZ":
+            light = self.scene.lights[self.selected_light_idx]
+            lightCube = self.scene.lightCubes[self.selected_light_idx]
+            x, y, z = light.position
+            step = 1
+            if chr(keycode) == 'x':
+                x -= step
+            elif chr(keycode) == 'X':
+                x += step
+            elif chr(keycode) == 'y':
+                y -= step
+            elif chr(keycode) == 'Y':
+                y += step
+            elif chr(keycode) == 'z':
+                z -= step
+            elif chr(keycode) == 'Z':
+                z += step
+            light.setPosition(Point((x, y, z)))
+            lightCube.setCurrentPosition(Point((x, y, z)))
+            self.shaderProg.setLight(self.selected_light_idx, light)
 
 
 

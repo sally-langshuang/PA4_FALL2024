@@ -392,8 +392,9 @@ class GLProgram:
                 ri+=1;
             }}
             
-            if  ((renderingFlag >> 9 & 0x1) == 1){{
-               vec4 result = vec4(0.0);
+            if ((renderingFlag >> 9 & 0x1) == 1){{
+                // vec4 result = vec4(vColor, 1.0);
+                vec4 result = vec4(0.0);
 
                 ////////// TODO 3: Illuminate your meshes
                 // Requirements:
@@ -479,7 +480,7 @@ class GLProgram:
                 }}
                 //result += ambientColor + diffuseColor + specularColor;
             
-                result += texture({self.attribs["textureImage"]}, vTexture);
+                
                 results[ri] = result;
                 ri+=1;
             }}
@@ -585,7 +586,7 @@ class GLProgram:
                 renderingFlag = renderingFlag | (0x1 << 6)
             if "texture" in routing:
                 renderingFlag = renderingFlag | (0x1 << 8)
-            if "custom" in routing:
+            if "lighttexture" in routing:
                 renderingFlag = renderingFlag | (0x1 << 9)
 
         self.use()
