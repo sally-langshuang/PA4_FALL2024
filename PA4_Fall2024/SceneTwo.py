@@ -43,14 +43,14 @@ class SceneTwo(Component, Animation):
         self.lRadius = 3
         self.lAngles = [0, 0, 0]
         cube = Component(Point((-1, 1, 0)), DisplayableCube(shaderProg, 0.8))
-        m1 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+        m1 = Material(np.array((0.1, 0.4, 0.1, 0.1)), np.array((0.2, 0.4, 0.2, 1)),
                       np.array((0.4, 0.8, 0.6, 0.1)), 64)
         cube.setMaterial(m1)
         cube.renderingRouting = "normal"
         self.addChild(cube)
 
         torus = Component(Point((1, 1, 0)), DisplayableTorus(shaderProg, 0.2, 0.4, 36, 36))
-        m2 = Material(np.array((0.1, 0.1, 0.1, 0.1)), np.array((0.2, 0.2, 0.2, 1)),
+        m2 = Material(np.array((0.1, 0.1, 0.2, 0.1)), np.array((0.2, 0.2, 0.5, 1)),
                       np.array((0.8, 0.6, 0.4, 1.0)), 64)
         torus.setMaterial(m2)
         torus.renderingRouting = "normal"
@@ -97,7 +97,7 @@ class SceneTwo(Component, Animation):
         self.addChild(lightCube1)
         self.addChild(lightCube2)
         self.lights = [l0, l1, l2]
-        # self.lightCubes = [lightCube0, lightCube1, lightCube2]
+        self.lightCubes = [lightCube0, lightCube1, lightCube2]
 
     def lightPos(self, radius, thetaAng, transformationMatrix):
         r = np.zeros(4)

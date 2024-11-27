@@ -287,24 +287,11 @@ class GLProgram:
                     //   Spotlight with radial and angular attenuation
                     //   * In the Sketch.py file Interrupt_keyboard method, bind keyboard interfaces that allows 
                     //   the user to toggle on/off specular, diffuse, and ambient with keys S, D, A.
-                    // 点光源计算
-                    //if (currentLight.pointOn) {{
-                        // 从光源到片段的方向向量
-                        //vec3 lightDir = normalize(currentLight.position - fragPosition);
-                        
-                        // 计算光源到片段的距离
-                        //float distance = length(currentLight.position - fragPosition);
-                        // 计算径向衰减
-                        //float attenuation = 1.0 / (currentLight.attenuation.x + currentLight.attenuation.y * distance + currentLight.attenuation.z * distance * distance);
-                        // 计算镜面反射
-                        // vec3 reflectDir = reflect(-lightDir, vNormal);  // 反射方向
-                        // float spec = pow(max(dot(viewDir, reflectDir), 0.0), {{self.attribs["material"]}}.highlight);
-                        // specularColor += attenuation * currentLight.color * {{self.attribs["material"]}}.specular * spec;
-
-                    //}}
+              
                     // Spotlight (if spotOn is true)
                     if (currentLight.spotOn) {{
                         // Compute spotlight attenuation based on the angle and direction
+                        lightDir = normalize(currentLight.position - vPos);
                         float theta = dot(lightDir, normalize(currentLight.spotDirection));  // 光照角度
                         if (theta > cos(currentLight.spotAngleLimit)) {{
                             float attenuation = pow(theta, currentLight.spotRadialFactor.x);
